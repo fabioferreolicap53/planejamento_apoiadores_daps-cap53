@@ -116,6 +116,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     e.preventDefault();
     if (isSaving) return;
 
+    if (selectedApoiadores.length === 0) {
+      alert('Por favor, selecione pelo menos um apoiador envolvido.');
+      return;
+    }
+
     setIsSaving(true);
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
@@ -216,7 +221,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-[#111418] text-base font-medium uppercase">EIXOS</label>
+                    <label className="text-[#111418] text-base font-medium uppercase">
+                      EIXOS <span className="text-red-500">*</span>
+                    </label>
                     {profile?.role === 'admin' && (
                       <button
                         type="button"
@@ -259,7 +266,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-[#111418] text-base font-medium uppercase">LINHA DE CUIDADO</label>
+                    <label className="text-[#111418] text-base font-medium uppercase">
+                      LINHA DE CUIDADO <span className="text-red-500">*</span>
+                    </label>
                     {profile?.role === 'admin' && (
                       <button
                         type="button"
@@ -303,7 +312,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">STATUS</label>
+                  <label className="text-[#111418] text-base font-medium uppercase">
+                    STATUS <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
                     <select
                       value={status}
@@ -324,7 +335,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-[#111418] text-base font-medium uppercase">APOIADOR(ES) ENVOLVIDO(S)</label>
+                    <label className="text-[#111418] text-base font-medium uppercase">
+                      APOIADOR(ES) ENVOLVIDO(S) <span className="text-red-500">*</span>
+                    </label>
                     {profile?.role === 'admin' && (
                       <button
                         type="button"
@@ -394,7 +407,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[#111418] text-base font-medium uppercase">RESUMO DO PLANEJAMENTO</label>
+                <label className="text-[#111418] text-base font-medium uppercase">
+                  RESUMO DO PLANEJAMENTO <span className="text-red-500">*</span>
+                </label>
                 <textarea
                   className="form-textarea w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary/50 h-32 disabled:bg-gray-50 disabled:text-gray-500"
                   placeholder="Descreva um resumo das ações planejadas..."
@@ -460,7 +475,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">DATA INICIAL</label>
+                  <label className="text-[#111418] text-base font-medium uppercase">
+                    DATA INICIAL <span className="text-red-500">*</span>
+                  </label>
                   <input
                     className="form-input w-full rounded-lg border-gray-300 h-14 disabled:bg-gray-50 disabled:text-gray-500"
                     type="date"
