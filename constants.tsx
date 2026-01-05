@@ -11,56 +11,44 @@ export const MOCK_USER = {
 export const MOCK_PLANS: Plan[] = [
   {
     id: "PLN-4920",
-    professional: "Dra. Sarah M.",
+    professional_id: "user-1",
     eixo: "INOVAÇÃO",
-    linhaCuidado: "SAÚDE MENTAL",
+    linha_cuidado: "SAÚDE MENTAL",
     status: "EM ANDAMENTO",
     apoiadores: ["ALINE", "ANA ALICE"],
     resumo: "Implementação de novos protocolos de atendimento para saúde mental.",
     meta: "Reduzir tempo de espera em 20%",
     avaliacao: "Mensal",
-    dataInicial: "2023-10-01",
-    dataFinal: "2023-12-31",
-    registrationDate: "24 Out, 2023",
-    registrationTime: "10:42",
-    initials: "SM",
-    color: "bg-blue-100 text-blue-700"
+    data_inicial: "2023-10-01",
+    data_final: "2023-12-31"
   },
   {
     id: "PLN-4918",
-    professional: "Dra. Sarah M.",
+    professional_id: "user-1",
     eixo: "QUALIFICAÇÃO",
-    linhaCuidado: "TUBERCULOSE",
+    linha_cuidado: "TUBERCULOSE",
     status: "PLANEJADO",
     apoiadores: ["RICARDO EMANUEL"],
     categorias: ["ENFERMEIRO(A)", "MÉDICO(A)"],
     resumo: "Capacitação técnica para manejo de casos complexos.",
     meta: "Capacitar 100% da equipe local",
     avaliacao: "Trimestral",
-    dataInicial: "2023-11-01",
-    dataFinal: "2024-02-01",
-    registrationDate: "22 Out, 2023",
-    registrationTime: "14:15",
-    initials: "RE",
-    color: "bg-purple-100 text-purple-700"
+    data_inicial: "2023-11-01",
+    data_final: "2024-02-01"
   },
   {
     id: "PLN-4890",
-    professional: "Dra. Sarah M.",
+    professional_id: "user-1",
     eixo: "PROCESSO DE TRABALHO",
-    linhaCuidado: "HAS/DM/CURATIVO",
+    linha_cuidado: "HAS/DM/CURATIVO",
     status: "CONCLUÍDO",
     apoiadores: ["SIMONE"],
     ciclo: "Semanal",
     resumo: "Otimização do fluxo de curativos na unidade.",
     meta: "Padronizar 5 técnicas de curativo",
     avaliacao: "Semestral",
-    dataInicial: "2023-08-01",
-    dataFinal: "2023-10-20",
-    registrationDate: "20 Out, 2023",
-    registrationTime: "09:00",
-    initials: "SI",
-    color: "bg-pink-100 text-pink-700"
+    data_inicial: "2023-08-01",
+    data_final: "2023-10-20"
   }
 ];
 
