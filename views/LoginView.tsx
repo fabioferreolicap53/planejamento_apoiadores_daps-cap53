@@ -164,7 +164,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
               </div>
             </div>
           </div>
-          <p className="mt-8 text-center text-xs text-gray-400">© 2023 DAPS/CAP5.3 Systems. Todos os direitos reservados.</p>
+          <p className="mt-8 text-center text-xs text-gray-400">Desenvolvido por Fabio Ferreira de Oliveira - DAPS/CAP5.3</p>
         </div>
       </main>
     </div>
