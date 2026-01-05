@@ -46,17 +46,17 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
         <div className="bg-background-light font-display text-[#1d1b20] min-h-screen flex flex-col">
             <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 px-6 lg:px-10 py-3 bg-white shadow-sm z-20">
                 <div className="flex items-center gap-4">
-                    <div className="size-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-                        <span className="material-symbols-outlined">health_and_safety</span>
+                    <div className="size-8 sm:size-10 rounded-full bg-blue-50 flex items-center justify-center text-primary shrink-0">
+                        <span className="material-symbols-outlined !text-[20px] sm:!text-[24px]">health_and_safety</span>
                     </div>
-                    <h2 className="text-[#1d1b20] text-lg font-bold leading-tight tracking-[-0.015em]">PLANEJAMENTO APOIADORES DAPS/CAP5.3</h2>
+                    <h2 className="text-[#1d1b20] text-sm sm:text-lg font-bold leading-tight tracking-[-0.015em] whitespace-normal sm:whitespace-nowrap">PLANEJAMENTO APOIADORES DAPS/CAP5.3</h2>
                 </div>
             </header>
 
             <main className="flex-1 flex items-center justify-center p-4 lg:p-8 relative overflow-hidden bg-[#f0f2f5]">
                 <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(30, 64, 175, 0.08) 0%, transparent 60%)' }}></div>
                 <div className="flex flex-col max-w-[480px] w-full items-center z-10">
-                    <div className="w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-8 lg:p-12">
+                    <div className="w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-6 sm:p-8 lg:p-12">
                         <div className="mb-8">
                             <h2 className="text-[#1d1b20] text-2xl font-bold leading-tight tracking-[-0.015em] mb-2">Criar sua conta</h2>
                             <p className="text-gray-600 text-sm">Preencha os dados abaixo para se cadastrar no portal.</p>

@@ -181,21 +181,21 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
   return (
     <div className="flex flex-col min-h-screen bg-background-light">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-3">
-        <div className="flex items-center gap-4">
+      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-10 py-3">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div className="size-8 flex items-center justify-center text-primary">
-            <span className="material-symbols-outlined text-3xl">assignment_add</span>
+            <span className="material-symbols-outlined text-2xl sm:text-3xl">assignment_add</span>
           </div>
-          <h2 className="text-[#111418] text-lg font-bold leading-tight">Registro de Planejamento</h2>
+          <h2 className="text-[#111418] text-base sm:text-lg font-bold leading-tight truncate">Registro de Planejamento</h2>
         </div>
         <div className="flex items-center gap-4">
         </div>
       </header>
 
-      <div className="flex flex-1 justify-center py-5 px-4 md:px-40">
+      <div className="flex flex-1 justify-center py-5 px-4 lg:px-40">
         <div className="max-w-[960px] flex-1">
           <div className="p-4 mb-4">
-            <h1 className="text-[#111418] text-[32px] font-bold leading-tight">
+            <h1 className="text-[#111418] text-2xl sm:text-[32px] font-bold leading-tight">
               {editingPlan ? 'Editar Plano' : 'Criar Novo Plano'}
             </h1>
             <p className="text-[#637588] text-sm mt-2">
@@ -212,8 +212,8 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
           </div>
 
           <div className="p-4 bg-white rounded-3xl shadow-sm border border-gray-100">
-            <form className="flex flex-col gap-6" onSubmit={handleSave}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form className="flex flex-col gap-5 sm:gap-6" onSubmit={handleSave}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
                     <label className="text-[#111418] text-base font-medium uppercase">EIXOS</label>

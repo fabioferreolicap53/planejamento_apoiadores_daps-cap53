@@ -1,6 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://rslwzlxhswtuneqpvqsr.supabase.co';
-const supabaseAnonKey = 'sb_publishable_F959SpaGgFdeUmCpGNbpdA_2qMTz40o';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Supabase credentials missing. Check your .env file or Vercel Environment Variables.');
+}
+
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');

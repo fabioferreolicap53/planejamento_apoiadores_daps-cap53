@@ -36,10 +36,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
     <div className="bg-background-light font-display text-[#1d1b20] min-h-screen flex flex-col">
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 px-6 lg:px-10 py-3 bg-white shadow-sm z-20">
         <div className="flex items-center gap-4">
-          <div className="size-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-            <span className="material-symbols-outlined">health_and_safety</span>
+          <div className="size-8 sm:size-10 rounded-full bg-blue-50 flex items-center justify-center text-primary shrink-0">
+            <span className="material-symbols-outlined !text-[20px] sm:!text-[24px]">health_and_safety</span>
           </div>
-          <h2 className="text-[#1d1b20] text-lg font-bold leading-tight tracking-[-0.015em]">PLANEJAMENTO APOIADORES DAPS/CAP5.3</h2>
+          <h2 className="text-[#1d1b20] text-sm sm:text-lg font-bold leading-tight tracking-[-0.015em] whitespace-normal sm:whitespace-nowrap">PLANEJAMENTO APOIADORES DAPS/CAP5.3</h2>
         </div>
         <div className="flex items-center gap-4">
         </div>
@@ -50,7 +50,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
         <div className="flex flex-col max-w-[960px] w-full items-center z-10">
           <div className="flex flex-col md:flex-row w-full max-w-[960px] bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
             {/* Blue Side */}
-            <div className="hidden md:flex md:w-5/12 bg-gradient-to-br from-blue-600 to-blue-800 p-10 flex-col justify-between relative text-white">
+            <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-blue-600 to-blue-800 p-10 flex-col justify-between relative text-white">
               <div
                 className="absolute inset-0 opacity-20 mix-blend-overlay"
                 style={{
@@ -60,9 +60,6 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
                 }}
               />
               <div className="relative z-10">
-                <div className="size-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white mb-8 border border-white/30">
-                  <span className="material-symbols-outlined !text-3xl">verified_user</span>
-                </div>
                 <h1 className="text-white text-3xl font-bold leading-tight mb-4">PLANEJAMENTO APOIADORES DAPS/CAP5.3</h1>
                 <p className="text-blue-100 text-sm leading-relaxed font-medium">
                   Acesse o portal profissional para registrar, gerenciar e auditar planos. Sua porta de entrada para operações DAPS/CAP5.3 simplificadas.
@@ -81,7 +78,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
             </div>
 
             {/* Form Side */}
-            <div className="w-full md:w-7/12 p-8 lg:p-12 flex flex-col justify-center bg-white">
+            <div className="w-full lg:w-7/12 p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-white">
               <div className="mb-8">
                 <h2 className="text-[#1d1b20] text-2xl font-bold leading-tight tracking-[-0.015em] mb-2">Bem-vindo de volta</h2>
                 <p className="text-gray-600 text-sm">Por favor, faça login para acessar seu painel.</p>

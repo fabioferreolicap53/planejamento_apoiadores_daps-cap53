@@ -38,15 +38,15 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   return (
     <div className="flex flex-col h-full">
       <header className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0 z-10">
-        <div className="px-8 py-6 max-w-7xl mx-auto w-full">
-          <div className="flex flex-wrap justify-between items-end gap-4">
-            <div className="flex flex-col gap-2">
-              <h1 className="text-[#111418] dark:text-white text-3xl font-black tracking-tighter">Histórico de Planos</h1>
-              <p className="text-[#617589] dark:text-gray-400 text-base">Revise e gerencie seu arquivo de planos registrados.</p>
+        <div className="px-4 sm:px-8 py-4 sm:py-6 max-w-7xl mx-auto w-full">
+          <div className="flex flex-wrap justify-between items-end gap-3 sm:gap-4">
+            <div className="flex flex-col gap-1 sm:gap-2">
+              <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl font-black tracking-tighter">Histórico de Planos</h1>
+              <p className="text-[#617589] dark:text-gray-400 text-sm sm:text-base">Revise e gerencie seu arquivo de planos registrados.</p>
             </div>
             <button
               onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 text-white gap-2 pl-4 text-sm font-bold shadow-sm transition-colors"
+              className="flex w-full sm:w-auto items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-sm transition-colors"
             >
               <span className="material-symbols-outlined text-[20px]">add</span>
               <span>Criar Novo Plano</span>
@@ -55,7 +55,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-8">
         <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white dark:bg-[#1a2634] p-4 rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm">
             <div className="w-full md:w-96">

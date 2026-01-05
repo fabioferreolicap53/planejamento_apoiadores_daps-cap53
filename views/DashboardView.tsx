@@ -46,15 +46,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   return (
     <div className="p-6 md:p-10 max-w-[1200px] mx-auto flex flex-col gap-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-[#111418] dark:text-white text-3xl md:text-4xl font-black tracking-tight">Painel</h1>
-          <p className="text-[#617589] dark:text-gray-400 text-base max-w-2xl">
+        <div className="flex flex-col gap-1 sm:gap-2">
+          <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">Painel</h1>
+          <p className="text-[#617589] dark:text-gray-400 text-sm sm:text-base max-w-2xl">
             Bem-vindo de volta, Profissional. Aqui está uma visão geral dos seus planos registrados e atividade recente dos clientes.
           </p>
         </div>
         <button
           onClick={() => onNavigate(View.CREATE_PLAN)}
-          className="flex items-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 py-3 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
+          className="flex w-full sm:w-auto items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 py-3 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
         >
           <span className="material-symbols-outlined text-[20px]">add</span>
           <span>Novo Plano</span>
