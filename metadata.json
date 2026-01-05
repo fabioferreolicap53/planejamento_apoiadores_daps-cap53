@@ -1,0 +1,8 @@
+
+{
+  "name": "DAPS Professional Portal",
+  "description": "A comprehensive professional portal for DAPS (Development and Professional Support) management, featuring secure login, interactive dashboards, plan history tracking, and professional development registration.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
