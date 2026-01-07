@@ -6,6 +6,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
 } from 'recharts';
+import PlanDetailsModal from '../components/PlanDetailsModal';
 
 interface DashboardViewProps {
   onNavigate: (view: View) => void;
@@ -36,6 +37,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
     return acc;
   }, [])
     .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
+
+  const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
 
   const stats = [
     { label: 'Total de Planos', value: plans.length.toString(), change: 'Total', type: 'positive', icon: 'description', color: 'blue' },
@@ -233,7 +236,10 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-[#617589] hover:text-primary dark:text-gray-400 transition-colors">
+                      <button
+                        onClick={() => setSelectedPlan(plan)}
+                        className="text-[#617589] hover:text-primary dark:text-gray-400 transition-colors"
+                      >
                         <span className="material-symbols-outlined text-[20px]">visibility</span>
                       </button>
                     </td>
@@ -244,6 +250,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
         </div>
       </div>
+
+      {selectedPlan && (
+        <PlanDetailsModal
+          plan={selectedPlan}
+          onClose={() => setSelectedPlan(null)}
+        />
+      )}
       <p className="text-xs text-[#617589] dark:text-gray-500 text-center pb-8">© 2023 DAPS/CAP5.3 Pro. Todos os direitos reservados.</p>
     </div>
   );

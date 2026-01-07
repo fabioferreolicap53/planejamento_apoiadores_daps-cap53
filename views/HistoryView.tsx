@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { View, Plan, Profile } from '../types';
 import { STATUS_COLORS } from '../constants';
 import { supabase } from '../lib/supabase';
+import PlanDetailsModal from '../components/PlanDetailsModal';
+
 interface HistoryViewProps {
   onNavigate: (view: View) => void;
   plans: Plan[];
@@ -13,6 +15,7 @@ interface HistoryViewProps {
 
 const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, onDelete, profile }) => {
   const [search, setSearch] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   const canManage = (plan: Plan) => {
     return profile?.role === 'admin' || profile?.id === plan.professional_id;
@@ -177,6 +180,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap text-right sticky right-0 bg-white dark:bg-[#1a2634] group-hover:bg-[#f0f9ff] dark:group-hover:bg-blue-900/10 z-10 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">
                         <div className="flex gap-2 justify-end">
+                          <button
+                            onClick={() => setSelectedPlan(plan)}
+                            className="text-[#617589] hover:text-primary p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            title="Ver detalhes"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">visibility</span>
+                          </button>
                           {canManage(plan) ? (
                             <>
                               <button
@@ -234,6 +244,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
           </div>
         </div>
       </div>
+
+      {selectedPlan && (
+        <PlanDetailsModal
+          plan={selectedPlan}
+          onClose={() => setSelectedPlan(null)}
+        />
+      )}
     </div>
   );
 };
