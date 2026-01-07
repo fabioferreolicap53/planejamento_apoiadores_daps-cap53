@@ -440,7 +440,6 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     <select
                       value={avaliacao}
                       onChange={(e) => setAvaliacao(e.target.value)}
-                      required
                       disabled={!canManage}
                       className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                     >

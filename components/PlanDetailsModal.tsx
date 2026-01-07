@@ -23,7 +23,7 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               <p className="text-sm text-gray-500 font-medium">ID: {plan.id}</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-400 hover:text-gray-600"
           >
@@ -51,10 +51,12 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Linha de Cuidado</label>
               <p className="text-sm font-semibold text-gray-900 dark:text-white">{plan.linha_cuidado}</p>
             </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Ciclo</label>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{plan.ciclo || 'N/A'}</p>
-            </div>
+            {plan.ciclo && (
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Ciclo</label>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{plan.ciclo}</p>
+              </div>
+            )}
           </div>
 
           <hr className="border-gray-100 dark:border-gray-800" />
@@ -130,16 +132,6 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
                 )) : <span className="text-sm text-gray-400 italic">Nenhum apoiador listado</span>}
               </div>
             </div>
-            <div className="space-y-3">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Categorias</label>
-              <div className="flex flex-wrap gap-2">
-                {plan.categorias?.length ? plan.categorias.map(c => (
-                  <span key={c} className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-100 dark:border-emerald-800">
-                    {c}
-                  </span>
-                )) : <span className="text-sm text-gray-400 italic">Sem categorias</span>}
-              </div>
-            </div>
           </div>
 
           {plan.observacoes && (
@@ -154,7 +146,7 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
 
         {/* Footer */}
         <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end bg-gray-50/30 dark:bg-gray-800/20">
-          <button 
+          <button
             onClick={onClose}
             className="px-8 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
           >
