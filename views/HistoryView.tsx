@@ -17,17 +17,34 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   const [search, setSearch] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
+  // New filter states
+  const [filterStatus, setFilterStatus] = useState<string>('Todos');
+  const [filterEixo, setFilterEixo] = useState<string>('Todos');
+  const [filterLinha, setFilterLinha] = useState<string>('Todos');
+
   const canManage = (plan: Plan) => {
     return profile?.role === 'admin' || profile?.id === plan.professional_id;
   };
 
-  const filteredPlans = plans.filter(p =>
-    p.linha_cuidado.toLowerCase().includes(search.toLowerCase()) ||
-    p.eixo.toLowerCase().includes(search.toLowerCase()) ||
-    (p.resumo || '').toLowerCase().includes(search.toLowerCase()) ||
-    (p.meta || '').toLowerCase().includes(search.toLowerCase()) ||
-    p.id.toLowerCase().includes(search.toLowerCase())
-  );
+  // Derive unique options for filters from the plans list
+  const statusOptions = ['Todos', ...new Set(plans.map(p => p.status))];
+  const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))];
+  const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))];
+
+  const filteredPlans = plans.filter(p => {
+    const matchesSearch =
+      p.linha_cuidado.toLowerCase().includes(search.toLowerCase()) ||
+      p.eixo.toLowerCase().includes(search.toLowerCase()) ||
+      (p.resumo || '').toLowerCase().includes(search.toLowerCase()) ||
+      (p.meta || '').toLowerCase().includes(search.toLowerCase()) ||
+      p.id.toLowerCase().includes(search.toLowerCase());
+
+    const matchesStatus = filterStatus === 'Todos' || p.status === filterStatus;
+    const matchesEixo = filterEixo === 'Todos' || p.eixo === filterEixo;
+    const matchesLinha = filterLinha === 'Todos' || p.linha_cuidado === filterLinha;
+
+    return matchesSearch && matchesStatus && matchesEixo && matchesLinha;
+  });
 
   const handleDelete = async (id: string) => {
     if (confirm('Tem certeza que deseja excluir este plano?')) {
@@ -36,6 +53,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         onDelete();
       }
     }
+  };
+
+  const clearFilters = () => {
+    setSearch('');
+    setFilterStatus('Todos');
+    setFilterEixo('Todos');
+    setFilterLinha('Todos');
   };
 
   return (
@@ -60,29 +84,79 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
 
       <div className="flex-1 overflow-y-auto p-4 sm:p-8">
         <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white dark:bg-[#1a2634] p-4 rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm">
-            <div className="w-full md:w-96">
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px]">search</span>
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-10 text-sm"
-                  placeholder="Buscar por linha, eixo, resumo ou ID..."
-                />
+          <div className="flex flex-col gap-4 bg-white dark:bg-[#1a2634] p-6 rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between w-full">
+              <div className="w-full lg:w-96">
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px]">search</span>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-10 text-sm"
+                    placeholder="Buscar por linha, eixo, resumo ou ID..."
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={clearFilters}
+                  className="flex h-10 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
+                  <span>Limpar Filtros</span>
+                </button>
               </div>
             </div>
-            <div className="flex gap-2 flex-wrap items-center">
-              {['Status: Todos', 'Data: Últimos 30 Dias'].map((filter) => (
-                <button key={filter} className="flex h-8 items-center gap-x-2 rounded-lg bg-[#f0f2f4] dark:bg-gray-800 border border-transparent px-3 text-sm font-medium">
-                  <span>{filter}</span>
-                  <span className="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
-                </button>
-              ))}
-              <button className="flex h-8 items-center gap-x-2 rounded-lg bg-[#f0f2f4] dark:bg-gray-800 border border-transparent px-3 text-sm font-medium">
-                <span>Ordenar: Mais Recentes</span>
-                <span className="material-symbols-outlined text-[18px]">sort</span>
-              </button>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
+                <div className="relative">
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  >
+                    {statusOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
+                <div className="relative">
+                  <select
+                    value={filterEixo}
+                    onChange={(e) => setFilterEixo(e.target.value)}
+                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  >
+                    {eixoOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
+                <div className="relative">
+                  <select
+                    value={filterLinha}
+                    onChange={(e) => setFilterLinha(e.target.value)}
+                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  >
+                    {linhaOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+                </div>
+              </div>
             </div>
           </div>
 
