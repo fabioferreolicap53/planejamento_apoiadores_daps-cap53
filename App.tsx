@@ -97,7 +97,7 @@ const App: React.FC = () => {
       if (session) {
         fetchProfile(session.user.id);
         fetchPlans();
-        if (currentView === View.LOGIN || currentView === View.REGISTER) {
+        if (currentView === View.LOGIN) {
           setCurrentView(View.DASHBOARD);
         }
       } else {

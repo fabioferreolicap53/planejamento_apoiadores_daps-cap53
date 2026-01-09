@@ -34,6 +34,8 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
             setError(signUpError.message);
             setLoading(false);
         } else {
+            // Sign out immediately to prevent auto-login
+            await supabase.auth.signOut();
             setSuccess(true);
             setLoading(false);
             // Wait a bit before redirecting or notifying
