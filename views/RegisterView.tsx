@@ -26,7 +26,7 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
                 data: {
                     full_name: fullName,
                 },
-                emailRedirectTo: window.location.origin
+                emailRedirectTo: import.meta.env.VITE_REDIRECT_URL || window.location.origin
             }
         });
 
@@ -99,6 +99,7 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
                                         />
                                     </div>
                                 </div>
+
 
                                 <div className="flex flex-col gap-2">
                                     <label className="text-[#1d1b20] text-sm font-medium">Endereço de E-mail</label>
