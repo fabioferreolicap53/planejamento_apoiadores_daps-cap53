@@ -149,7 +149,10 @@ const App: React.FC = () => {
       return (
         <RegisterView
           onBackToLogin={() => setCurrentView(View.LOGIN)}
-          onRegisterSuccess={() => setCurrentView(View.LOGIN)}
+          onRegisterSuccess={() => {
+            setSuccessMessage('Cadastro concluído com sucesso! Você já pode fazer login.');
+            setCurrentView(View.LOGIN);
+          }}
         />
       );
     }

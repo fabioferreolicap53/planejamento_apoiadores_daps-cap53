@@ -13,6 +13,8 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [countdown, setCountdown] = useState(6);
+    const [progress, setProgress] = useState(100);
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,12 +40,20 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
             await supabase.auth.signOut();
             setSuccess(true);
             setLoading(false);
-            // Wait a bit before redirecting or notifying
-            setTimeout(() => {
-                onRegisterSuccess();
-            }, 3000);
         }
     };
+
+    React.useEffect(() => {
+        if (success && countdown > 0) {
+            const timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+                setProgress((prev) => prev - (100 / 6));
+            }, 1000);
+            return () => clearInterval(timer);
+        } else if (success && countdown === 0) {
+            onRegisterSuccess();
+        }
+    }, [success, countdown, onRegisterSuccess]);
 
     return (
         <div className="bg-background-light font-display text-[#1d1b20] min-h-screen flex flex-col">
@@ -66,16 +76,37 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
                         </div>
 
                         {success ? (
-                            <div className="text-center py-8">
-                                <div className="size-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <span className="material-symbols-outlined !text-4xl">check_circle</span>
+                            <div className="text-center py-8 animate-in fade-in duration-700">
+                                <div className="size-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-emerald-200">
+                                    <span className="material-symbols-outlined !text-5xl animate-bounce">check_circle</span>
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">Cadastro realizado!</h3>
-                                <p className="text-gray-600 mb-4">
-                                    Sua conta foi criada com sucesso para <strong>{email}</strong>.
-                                    Você já pode fazer login no portal.
-                                </p>
-                                <p className="text-sm text-gray-500">Redirecionando para o login em instantes...</p>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3">Cadastro realizado com sucesso!</h3>
+                                <div className="bg-emerald-50 rounded-2xl p-6 mb-8 border border-emerald-100">
+                                    <p className="text-gray-700 text-base leading-relaxed">
+                                        Sua conta foi criada para <strong>{email}</strong>.
+                                        Agora você pode acessar o portal com suas credenciais.
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4 max-w-[320px] mx-auto">
+                                    <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                        <div
+                                            className="absolute left-0 top-0 h-full bg-primary transition-all duration-1000 ease-linear"
+                                            style={{ width: `${progress}%` }}
+                                        ></div>
+                                    </div>
+                                    <p className="text-sm text-gray-500 font-medium">
+                                        Redirecionando para o login em <span className="text-primary font-bold">{countdown}</span> segundos...
+                                    </p>
+
+                                    <button
+                                        onClick={onRegisterSuccess}
+                                        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl h-12 px-6 bg-white border-2 border-primary text-primary hover:bg-primary/5 text-base font-bold transition-all"
+                                    >
+                                        Ir para o login agora
+                                        <span className="material-symbols-outlined">arrow_forward</span>
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <form className="flex flex-col gap-6" onSubmit={handleSignUp}>
