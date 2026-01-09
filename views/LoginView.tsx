@@ -5,14 +5,16 @@ import { supabase } from '../lib/supabase';
 interface LoginViewProps {
   onLogin: () => void;
   onNavigateToRegister: () => void;
+  successMessage?: string | null;
 }
 
-const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) => {
+const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister, successMessage: initialSuccessMessage }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(initialSuccessMessage || null);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +27,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
     });
 
     if (signInError) {
-      if (signInError.message.includes('Email not confirmed')) {
-        setError('Você precisa confirmar seu e-mail antes de acessar. Verifique sua caixa de entrada.');
-      } else {
-        setError(signInError.message);
-      }
+      setError(signInError.message);
       setLoading(false);
     } else {
       onLogin();
@@ -89,6 +87,12 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
               </div>
 
               <form className="flex flex-col gap-6" onSubmit={handleSignIn}>
+                {success && (
+                  <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-medium flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                    {success}
+                  </div>
+                )}
                 {error && (
                   <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-sm font-medium flex items-center gap-2">
                     <span className="material-symbols-outlined text-[18px]">error</span>

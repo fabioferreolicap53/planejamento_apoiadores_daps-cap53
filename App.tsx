@@ -16,6 +16,25 @@ const App: React.FC = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Handle email confirmation redirect
+    const handleEmailConfirmation = async () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes('type=signup')) {
+        // Sign out to ensure we go to login screen instead of auto-logging in
+        await supabase.auth.signOut();
+        setIsLoggedIn(false);
+        setSuccessMessage('E-mail confirmado com sucesso! Agora você pode fazer login.');
+        setCurrentView(View.LOGIN);
+        // Clear hash from URL
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    };
+
+    handleEmailConfirmation();
+  }, []);
 
   const fetchProfile = async (userId: string) => {
     const { data, error } = await supabase
@@ -138,6 +157,7 @@ const App: React.FC = () => {
       <LoginView
         onLogin={handleLogin}
         onNavigateToRegister={() => setCurrentView(View.REGISTER)}
+        successMessage={successMessage}
       />
     );
   }

@@ -70,8 +70,8 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">Cadastro realizado!</h3>
                                 <p className="text-gray-600 mb-4">
-                                    Enviamos um e-mail de confirmação para <strong>{email}</strong>.
-                                    Você <strong>precisa confirmar seu e-mail</strong> antes de conseguir fazer login.
+                                    Sua conta foi criada com sucesso para <strong>{email}</strong>.
+                                    Você já pode fazer login no portal.
                                 </p>
                                 <p className="text-sm text-gray-500">Redirecionando para o login em instantes...</p>
                             </div>
