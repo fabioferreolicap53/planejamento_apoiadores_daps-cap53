@@ -25,7 +25,8 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
             options: {
                 data: {
                     full_name: fullName,
-                }
+                },
+                emailRedirectTo: window.location.origin
             }
         });
 
@@ -68,7 +69,11 @@ const RegisterView: React.FC<RegisterViewProps> = ({ onBackToLogin, onRegisterSu
                                     <span className="material-symbols-outlined !text-4xl">check_circle</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">Cadastro realizado!</h3>
-                                <p className="text-gray-600">Verifique seu e-mail para confirmar a conta. Redirecionando...</p>
+                                <p className="text-gray-600 mb-4">
+                                    Enviamos um e-mail de confirmação para <strong>{email}</strong>.
+                                    Você <strong>precisa confirmar seu e-mail</strong> antes de conseguir fazer login.
+                                </p>
+                                <p className="text-sm text-gray-500">Redirecionando para o login em instantes...</p>
                             </div>
                         ) : (
                             <form className="flex flex-col gap-6" onSubmit={handleSignUp}>

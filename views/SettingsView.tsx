@@ -32,7 +32,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate, profile }) => {
                             <div className="flex flex-col gap-1">
                                 <h3 className="text-2xl font-bold">{profile?.full_name || 'Usuário'}</h3>
                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 w-fit">
-                                    {profile?.role === 'admin' ? 'Administrador' : 'Profissional'}
+                                    {profile?.role === 'Administrador' ? 'Administrador' : 'Profissional'}
                                 </span>
                             </div>
                         </div>
@@ -47,7 +47,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate, profile }) => {
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Nível de Privilégio</label>
                                 <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700 font-bold text-primary">
-                                    {profile?.role?.toUpperCase() || 'USER'}
+                                    {profile?.role?.toUpperCase()}
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate, profile }) => {
                                                 : 'Você tem acesso restrito.'}
                                         </p>
                                         <p className="text-xs text-blue-700 dark:text-blue-400">
-                                            {profile?.role === 'admin'
+                                            {profile?.role === 'Administrador'
                                                 ? 'Como administrador, você pode visualizar, editar e excluir qualquer plano registrado por qualquer profissional.'
                                                 : 'Como profissional, você pode visualizar todos os planos, mas só tem permissão para editar ou excluir os planos criados por você mesmo.'}
                                         </p>
@@ -91,17 +91,16 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate, profile }) => {
                                         onClick={async () => {
                                             const code = (document.getElementById('admin-code') as HTMLInputElement).value;
                                             if (code === 'DAPS-ADMIN' || code === 'DAPS-USER') {
-                                                const newRole = code === 'DAPS-ADMIN' ? 'admin' : 'user';
+                                                const newRole = code === 'DAPS-ADMIN' ? 'Administrador' : 'Normal';
                                                 const { error } = await supabase
                                                     .from('profiles')
                                                     .upsert({
                                                         id: profile?.id,
                                                         role: newRole,
-                                                        full_name: profile?.full_name,
-                                                        avatar_url: profile?.avatar_url
+                                                        updated_at: new Date().toISOString()
                                                     });
                                                 if (!error) {
-                                                    alert(`Privilégio alterado para ${newRole === 'admin' ? 'Administrador' : 'Profissional'}!`);
+                                                    alert(`Privilégio alterado para ${newRole === 'Administrador' ? 'Administrador' : 'Profissional'}!`);
                                                     window.location.reload();
                                                 } else {
                                                     alert('Erro ao alterar privilégio.');

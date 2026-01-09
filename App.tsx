@@ -25,15 +25,21 @@ const App: React.FC = () => {
       .maybeSingle();
 
     if (data && !error) {
-      setProfile(data);
+      const { data: { user } } = await supabase.auth.getUser();
+      setProfile({
+        ...data,
+        full_name: user?.user_metadata?.full_name || data.username || 'Usuário',
+        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || userId}`
+      });
     } else {
       // If profile doesn't exist, use auth data as fallback
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setProfile({
           id: user.id,
+          username: user.email?.split('@')[0] || 'usuario',
           full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuário',
-          role: user.user_metadata?.role || 'user',
+          role: user.user_metadata?.role === 'Administrador' ? 'Administrador' : 'Normal',
           avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`
         });
       }

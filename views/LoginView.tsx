@@ -25,7 +25,11 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onNavigateToRegister }) 
     });
 
     if (signInError) {
-      setError(signInError.message);
+      if (signInError.message.includes('Email not confirmed')) {
+        setError('Você precisa confirmar seu e-mail antes de acessar. Verifique sua caixa de entrada.');
+      } else {
+        setError(signInError.message);
+      }
       setLoading(false);
     } else {
       onLogin();

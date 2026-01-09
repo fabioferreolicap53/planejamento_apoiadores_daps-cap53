@@ -67,11 +67,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, pr
           <div className="flex items-center gap-3 mb-4">
             <div className="flex flex-col overflow-hidden justify-center w-full">
               <div className="flex items-center gap-1.5 overflow-hidden">
-                <p className="text-sm font-semibold dark:text-white truncate">{profile?.full_name || 'Usuário'}</p>
-                {profile?.role === 'admin' && (
+                <p className="text-sm font-semibold dark:text-white truncate">{profile?.full_name || profile?.username || 'Usuário'}</p>
+                {profile?.role === 'Administrador' && (
                   <span className="bg-primary/10 text-primary text-[8px] font-black px-1 rounded border border-primary/20 uppercase tracking-tighter shrink-0">Admin</span>
                 )}
               </div>
+              {profile?.unidade && (
+                <p className="text-[10px] text-gray-500 truncate">{profile.unidade} - {profile.equipe || 'Sem equipe'}</p>
+              )}
             </div>
           </div>
           <button
