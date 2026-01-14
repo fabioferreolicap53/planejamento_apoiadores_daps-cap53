@@ -38,6 +38,28 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   }, [])
     .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
 
+  const apoiadoresData = plans.reduce((acc: any[], plan) => {
+    plan.apoiadores.forEach(apoiador => {
+      const existing = acc.find(a => a.name === apoiador);
+      if (existing) {
+        existing.value += 1;
+      } else {
+        acc.push({ name: apoiador, value: 1 });
+      }
+    });
+    return acc;
+  }, []).sort((a, b) => b.value - a.value);
+
+  const linhaCuidadoData = plans.reduce((acc: any[], plan) => {
+    const existing = acc.find(l => l.name === plan.linha_cuidado);
+    if (existing) {
+      existing.value += 1;
+    } else {
+      acc.push({ name: plan.linha_cuidado, value: 1 });
+    }
+    return acc;
+  }, []).sort((a, b) => b.value - a.value);
+
   const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
 
   const stats = [
@@ -195,6 +217,76 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Planos por Apoiador</h3>
+            <span className="material-symbols-outlined text-gray-400">groups</span>
+          </div>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 20, right: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+                <XAxis type="number" hide />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#617589', fontSize: 12 }}
+                  width={100}
+                />
+                <Tooltip
+                  cursor={{ fill: '#f3f4f6' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar
+                  dataKey="value"
+                  fill="#8b5cf6"
+                  radius={[0, 4, 4, 0]}
+                  barSize={30}
+                  label={{ position: 'right', fill: '#617589', fontSize: 12 }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Distribuição por Linha de Cuidado</h3>
+            <span className="material-symbols-outlined text-gray-400">analytics</span>
+          </div>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 20, right: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+                <XAxis type="number" hide />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#617589', fontSize: 12 }}
+                  width={100}
+                />
+                <Tooltip
+                  cursor={{ fill: '#f3f4f6' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar
+                  dataKey="value"
+                  fill="#ec4899"
+                  radius={[0, 4, 4, 0]}
+                  barSize={30}
+                  label={{ position: 'right', fill: '#617589', fontSize: 12 }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
