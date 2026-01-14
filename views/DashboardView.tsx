@@ -14,14 +14,25 @@ interface DashboardViewProps {
 }
 
 const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
+  const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
+  const [filterLinha, setFilterLinha] = React.useState<string>('Todos');
+
+  // Derive unique options for filter
+  const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
+
+  // Filter plans based on selection
+  const filteredPlans = plans.filter(p =>
+    filterLinha === 'Todos' || p.linha_cuidado === filterLinha
+  );
+
   const chartData = [
-    { name: 'PANEJADO', value: plans.filter(p => p.status === 'PLANEJADO').length, color: '#137fec' },
-    { name: 'EM ANDAMENTO', value: plans.filter(p => p.status === 'EM ANDAMENTO').length, color: '#f97316' },
-    { name: 'CONCLUÍDO', value: plans.filter(p => p.status === 'CONCLUÍDO').length, color: '#078838' },
-    { name: 'SUSPENSO', value: plans.filter(p => p.status === 'SUSPENSO').length, color: '#ef4444' },
+    { name: 'PANEJADO', value: filteredPlans.filter(p => p.status === 'PLANEJADO').length, color: '#137fec' },
+    { name: 'EM ANDAMENTO', value: filteredPlans.filter(p => p.status === 'EM ANDAMENTO').length, color: '#f97316' },
+    { name: 'CONCLUÍDO', value: filteredPlans.filter(p => p.status === 'CONCLUÍDO').length, color: '#078838' },
+    { name: 'SUSPENSO', value: filteredPlans.filter(p => p.status === 'SUSPENSO').length, color: '#ef4444' },
   ].filter(d => d.value > 0);
 
-  const temporalData = plans.reduce((acc: any[], plan) => {
+  const temporalData = filteredPlans.reduce((acc: any[], plan) => {
     if (!plan.data_inicial) return acc;
     const date = new Date(plan.data_inicial);
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -38,7 +49,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   }, [])
     .sort((a: any, b: any) => a.rawDate.getTime() - b.rawDate.getTime());
 
-  const apoiadoresData = plans.reduce((acc: any[], plan) => {
+  const apoiadoresData = filteredPlans.reduce((acc: any[], plan) => {
     plan.apoiadores.forEach(apoiador => {
       const existing = acc.find(a => a.name === apoiador);
       if (existing) {
@@ -50,7 +61,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
     return acc;
   }, []).sort((a, b) => b.value - a.value);
 
-  const linhaCuidadoData = plans.reduce((acc: any[], plan) => {
+  const linhaCuidadoData = filteredPlans.reduce((acc: any[], plan) => {
     const existing = acc.find(l => l.name === plan.linha_cuidado);
     if (existing) {
       existing.value += 1;
@@ -60,30 +71,44 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
     return acc;
   }, []).sort((a, b) => b.value - a.value);
 
-  const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
-
   const stats = [
-    { label: 'Total de Planos', value: plans.length.toString(), change: 'Total', type: 'positive', icon: 'description', color: 'blue' },
-    { label: 'Planos em Andamento', value: plans.filter(p => p.status === 'EM ANDAMENTO').length.toString(), change: 'Ativo', type: 'positive', icon: 'pending_actions', color: 'orange' },
-    { label: 'Resultados Alcançados', value: plans.filter(p => p.status === 'CONCLUÍDO').length.toString(), change: 'Sucesso', type: 'positive', icon: 'auto_graph', color: 'purple' },
+    { label: 'Total de Planos', value: filteredPlans.length.toString(), change: 'Total', type: 'positive', icon: 'description', color: 'blue' },
+    { label: 'Planos em Andamento', value: filteredPlans.filter(p => p.status === 'EM ANDAMENTO').length.toString(), change: 'Ativo', type: 'positive', icon: 'pending_actions', color: 'orange' },
+    { label: 'Resultados Alcançados', value: filteredPlans.filter(p => p.status === 'CONCLUÍDO').length.toString(), change: 'Sucesso', type: 'positive', icon: 'auto_graph', color: 'purple' },
   ];
 
   return (
     <div className="p-6 md:p-10 max-w-[1200px] mx-auto flex flex-col gap-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-6">
         <div className="flex flex-col gap-1 sm:gap-2">
           <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">Painel</h1>
-          <p className="text-[#617589] dark:text-gray-400 text-sm sm:text-base max-w-2xl">
-            Bem-vindo de volta, Profissional. Aqui está uma visão geral dos seus planos registrados e atividade recente dos clientes.
-          </p>
         </div>
-        <button
-          onClick={() => onNavigate(View.CREATE_PLAN)}
-          className="flex w-full sm:w-auto items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 py-3 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          <span>Novo Plano</span>
-        </button>
+
+        <div className="flex flex-wrap items-center gap-4 flex-1 justify-end">
+          <div className="flex flex-col gap-1.5 min-w-[200px]">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Filtrar por Linha de Cuidado</label>
+            <div className="relative">
+              <select
+                value={filterLinha}
+                onChange={(e) => setFilterLinha(e.target.value)}
+                className="form-select flex w-full rounded-xl border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-[#1A2633] h-11 text-sm pl-4 pr-10 appearance-none font-bold text-primary shadow-sm hover:border-primary transition-colors cursor-pointer"
+              >
+                {linhaOptions.map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">filter_list</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => onNavigate(View.CREATE_PLAN)}
+            className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 h-11 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
+          >
+            <span className="material-symbols-outlined text-[20px]">add</span>
+            <span>Novo Plano</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -116,11 +141,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
           <div className="flex flex-col gap-6">
             {[
-              { label: 'INOVAÇÃO', value: plans.filter(p => p.eixo === 'INOVAÇÃO').length, color: 'bg-primary' },
-              { label: 'QUALIFICAÇÃO', value: plans.filter(p => p.eixo === 'QUALIFICAÇÃO').length, color: 'bg-orange-500' },
-              { label: 'PROCESSO DE TRABALHO', value: plans.filter(p => p.eixo === 'PROCESSO DE TRABALHO').length, color: 'bg-green-600' },
+              { label: 'INOVAÇÃO', value: filteredPlans.filter(p => p.eixo === 'INOVAÇÃO').length, color: 'bg-primary' },
+              { label: 'QUALIFICAÇÃO', value: filteredPlans.filter(p => p.eixo === 'QUALIFICAÇÃO').length, color: 'bg-orange-500' },
+              { label: 'PROCESSO DE TRABALHO', value: filteredPlans.filter(p => p.eixo === 'PROCESSO DE TRABALHO').length, color: 'bg-green-600' },
             ].map((item) => {
-              const percentage = plans.length > 0 ? Math.round((item.value / plans.length) * 100) : 0;
+              const percentage = filteredPlans.length > 0 ? Math.round((item.value / filteredPlans.length) * 100) : 0;
               return (
                 <div key={item.label} className="flex flex-col gap-2">
                   <div className="flex justify-between items-end">
@@ -164,8 +189,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-3xl font-black text-[#111418] dark:text-white">{plans.length}</span>
-                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Planos Totais</span>
+                <span className="text-3xl font-black text-[#111418] dark:text-white">{filteredPlans.length}</span>
+                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Planos Filtrados</span>
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full sm:w-auto">
@@ -173,7 +198,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                 <div key={item.name} className="flex items-center gap-3">
                   <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
                   <span className="text-sm text-[#617589] dark:text-gray-300 flex-1">{item.name}</span>
-                  <span className="text-sm font-bold text-[#111418] dark:text-white">{Math.round((item.value / plans.length) * 100)}%</span>
+                  <span className="text-sm font-bold text-[#111418] dark:text-white">{filteredPlans.length > 0 ? Math.round((item.value / filteredPlans.length) * 100) : 0}%</span>
                 </div>
               ))}
             </div>
@@ -308,7 +333,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#dbe0e6] dark:divide-gray-700">
-                {plans.slice(0, 5).map((plan) => (
+                {filteredPlans.slice(0, 5).map((plan) => (
                   <tr key={plan.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
