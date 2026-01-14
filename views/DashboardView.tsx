@@ -118,7 +118,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-6 h-12 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 whitespace-nowrap"
         >
           <span className="material-symbols-outlined text-[22px]">add</span>
-          <span>Novo Plano</span>
+          <span className="hidden sm:inline">Novo Plano</span>
+          <span className="sm:hidden">Novo</span>
         </button>
       </div>
 
