@@ -78,37 +78,57 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   ];
 
   return (
-    <div className="p-6 md:p-10 max-w-[1200px] mx-auto flex flex-col gap-8">
-      <div className="flex flex-wrap items-center justify-between gap-6">
-        <div className="flex flex-col gap-1 sm:gap-2">
+    <div className="p-6 md:p-10 max-w-[1200px] mx-auto flex flex-col gap-6">
+      <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-6 mb-2">
+        <div className="flex flex-col gap-1">
           <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">Painel</h1>
+          <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 flex-1 justify-end">
-          <div className="flex flex-col gap-1.5 min-w-[200px]">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Filtrar por Linha de Cuidado</label>
-            <div className="relative">
-              <select
-                value={filterLinha}
-                onChange={(e) => setFilterLinha(e.target.value)}
-                className="form-select flex w-full rounded-xl border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-[#1A2633] h-11 text-sm pl-4 pr-10 appearance-none font-bold text-primary shadow-sm hover:border-primary transition-colors cursor-pointer"
-              >
-                {linhaOptions.map(opt => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">filter_list</span>
+        <button
+          onClick={() => onNavigate(View.CREATE_PLAN)}
+          className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-6 h-12 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 whitespace-nowrap"
+        >
+          <span className="material-symbols-outlined text-[22px]">add</span>
+          <span className="hidden sm:inline">Novo Plano</span>
+          <span className="sm:hidden">Novo</span>
+        </button>
+      </div>
+
+      <div className="flex flex-col items-center justify-center -mt-2">
+        <div className="w-full max-w-2xl bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-700 p-2 shadow-xl shadow-blue-500/5 flex flex-col sm:flex-row items-center gap-4 relative overflow-hidden">
+          <div className="absolute left-0 top-0 w-1 h-full bg-primary opacity-20 hidden sm:block"></div>
+
+          <div className="flex items-center gap-3 px-4 py-2 border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-gray-700 w-full sm:w-auto min-w-max">
+            <div className="size-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary">
+              <span className="material-symbols-outlined !text-[20px]">filter_alt</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#617589] dark:text-gray-400">Filtrar por</span>
+              <span className="text-xs font-bold text-[#111418] dark:text-white">Linha de Cuidado</span>
             </div>
           </div>
 
-          <button
-            onClick={() => onNavigate(View.CREATE_PLAN)}
-            className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 h-11 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
-          >
-            <span className="material-symbols-outlined text-[20px]">add</span>
-            <span>Novo Plano</span>
-          </button>
+          <div className="relative flex-1 w-full px-2 sm:px-0">
+            <select
+              value={filterLinha}
+              onChange={(e) => setFilterLinha(e.target.value)}
+              className="form-select flex w-full border-none bg-gray-50/50 dark:bg-gray-800/50 rounded-xl h-12 text-sm pl-4 pr-10 appearance-none font-bold text-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
+            >
+              {linhaOptions.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-primary">expand_more</span>
+          </div>
+
+          <div className="flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900/10 rounded-xl min-w-max">
+            <span className="text-xs font-black text-primary uppercase tracking-tighter">
+              {filteredPlans.length} {filteredPlans.length === 1 ? 'PLANO' : 'PLANOS'}
+            </span>
+          </div>
         </div>
+        <div className="h-4 w-px bg-gradient-to-b from-gray-200 to-transparent dark:from-gray-700"></div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
