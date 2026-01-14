@@ -12,7 +12,7 @@ interface CreatePlanViewProps {
 }
 
 const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSuccess, editingPlan, profile }) => {
-  const canManage = !editingPlan || profile?.role === 'admin' || profile?.id === editingPlan.professional_id;
+  const canManage = !editingPlan || profile?.role === 'Administrador' || profile?.id === editingPlan.professional_id;
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(editingPlan?.categorias || []);
   const [selectedApoiadores, setSelectedApoiadores] = useState<string[]>(editingPlan?.apoiadores || []);

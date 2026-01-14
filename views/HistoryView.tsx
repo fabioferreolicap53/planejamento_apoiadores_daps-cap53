@@ -23,7 +23,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   const [filterLinha, setFilterLinha] = useState<string>('Todos');
 
   const canManage = (plan: Plan) => {
-    return profile?.role === 'admin' || profile?.id === plan.professional_id;
+    return profile?.role === 'Administrador' || profile?.id === plan.professional_id;
   };
 
   // Derive unique options for filters from the plans list
