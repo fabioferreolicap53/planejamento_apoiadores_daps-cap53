@@ -387,7 +387,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           onClose={() => setSelectedPlan(null)}
         />
       )}
-      <p className="text-xs text-[#617589] dark:text-gray-500 text-center pb-8">© 2023 DAPS/CAP5.3 Pro. Todos os direitos reservados.</p>
+      <p className="text-xs text-[#617589] dark:text-gray-500 text-center pb-8">Desenvolvido por Fabio Ferreira de Oliveira - DAPS/CAP5.3</p>
     </div>
   );
 };
