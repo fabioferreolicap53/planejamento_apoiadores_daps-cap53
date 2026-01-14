@@ -77,44 +77,6 @@ const SettingsView: React.FC<SettingsViewProps> = ({ onNavigate, profile }) => {
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
-                                <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Alterar Nível de Privilégio (Demo/Admin)</h3>
-                                <p className="text-xs text-gray-500 mb-4">Insira o código administrativo para alterar seu papel.</p>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="password"
-                                        id="admin-code"
-                                        placeholder="Código administrativo"
-                                        className="h-10 flex-1 px-4 rounded-lg border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary text-sm"
-                                    />
-                                    <button
-                                        onClick={async () => {
-                                            const code = (document.getElementById('admin-code') as HTMLInputElement).value;
-                                            if (code === 'DAPS-ADMIN' || code === 'DAPS-USER') {
-                                                const newRole = code === 'DAPS-ADMIN' ? 'Administrador' : 'Normal';
-                                                const { error } = await supabase
-                                                    .from('profiles')
-                                                    .upsert({
-                                                        id: profile?.id,
-                                                        role: newRole,
-                                                        updated_at: new Date().toISOString()
-                                                    });
-                                                if (!error) {
-                                                    alert(`Privilégio alterado para ${newRole === 'Administrador' ? 'Administrador' : 'Profissional'}!`);
-                                                    window.location.reload();
-                                                } else {
-                                                    alert('Erro ao alterar privilégio.');
-                                                }
-                                            } else {
-                                                alert('Código inválido.');
-                                            }
-                                        }}
-                                        className="h-10 px-6 rounded-lg bg-gray-900 text-white text-sm font-bold hover:bg-black transition-colors"
-                                    >
-                                        Aplicar
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
