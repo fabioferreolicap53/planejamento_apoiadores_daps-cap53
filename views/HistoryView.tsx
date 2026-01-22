@@ -21,6 +21,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   const [filterStatus, setFilterStatus] = useState<string>('Todos');
   const [filterEixo, setFilterEixo] = useState<string>('Todos');
   const [filterLinha, setFilterLinha] = useState<string>('Todos');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   const canManage = (plan: Plan) => {
     return profile?.role === 'Administrador' || profile?.id === plan.professional_id;
@@ -43,7 +45,14 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     const matchesEixo = filterEixo === 'Todos' || p.eixo === filterEixo;
     const matchesLinha = filterLinha === 'Todos' || p.linha_cuidado === filterLinha;
 
-    return matchesSearch && matchesStatus && matchesEixo && matchesLinha;
+    const planDate = p.data_inicial ? new Date(p.data_inicial).getTime() : null;
+    const start = startDate ? new Date(startDate).getTime() : null;
+    const end = endDate ? new Date(endDate).getTime() : null;
+
+    const matchesDate = (!start || (planDate && planDate >= start)) &&
+      (!end || (planDate && planDate <= end));
+
+    return matchesSearch && matchesStatus && matchesEixo && matchesLinha && matchesDate;
   });
 
   const handleDelete = async (id: string) => {
@@ -60,6 +69,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     setFilterStatus('Todos');
     setFilterEixo('Todos');
     setFilterLinha('Todos');
+    setStartDate('');
+    setEndDate('');
   };
 
   return (
@@ -68,7 +79,14 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         <div className="px-4 sm:px-8 py-3 sm:py-4 max-w-7xl mx-auto w-full">
           <div className="flex flex-wrap justify-between items-end gap-3 sm:gap-4">
             <div className="flex flex-col">
-              <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl font-black tracking-tighter">Histórico de Planos</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl font-black tracking-tighter">Histórico de Planos</h1>
+                <div className="flex items-center px-2.5 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
+                  <span className="text-[10px] sm:text-xs font-bold text-primary whitespace-nowrap">
+                    {filteredPlans.length} {filteredPlans.length === 1 ? 'REGISTRO' : 'REGISTROS'}
+                  </span>
+                </div>
+              </div>
               <p className="text-[#617589] dark:text-gray-400 text-xs sm:text-sm">Revise e gerencie seu arquivo de planos registrados.</p>
             </div>
             <button
@@ -109,7 +127,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
               <div className="relative">
@@ -155,6 +173,25 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                   ))}
                 </select>
                 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Início entre</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="form-input flex-1 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-xs font-medium"
+                />
+                <span className="text-[#617589] text-xs font-bold">e</span>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="form-input flex-1 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-xs font-medium"
+                />
               </div>
             </div>
           </div>

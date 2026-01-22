@@ -16,17 +16,34 @@ interface DashboardViewProps {
 const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
   const [filterLinha, setFilterLinha] = React.useState<string>('Todos');
+  const [filterEixo, setFilterEixo] = React.useState<string>('Todos');
 
-  // Derive unique options for filter
+  // Derive unique options for filters
   const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
+  const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))].sort();
 
   // Filter plans based on selection
   const filteredPlans = plans.filter(p =>
-    filterLinha === 'Todos' || p.linha_cuidado === filterLinha
+    (filterLinha === 'Todos' || p.linha_cuidado === filterLinha) &&
+    (filterEixo === 'Todos' || p.eixo === filterEixo)
   );
 
+  // New Metrics Calculations
+  const concludedPlans = filteredPlans.filter(p => p.status === 'CONCLUÍDO');
+  const resolutividade = filteredPlans.length > 0
+    ? Math.round((concludedPlans.length / filteredPlans.length) * 100)
+    : 0;
+
+  const avgLeadTime = concludedPlans.length > 0
+    ? Math.round(concludedPlans.reduce((acc, p) => {
+      const start = new Date(p.data_inicial).getTime();
+      const end = p.created_at ? new Date(p.created_at).getTime() : Date.now();
+      return acc + (end - start) / (1000 * 60 * 60 * 24);
+    }, 0) / concludedPlans.length)
+    : 0;
+
   const chartData = [
-    { name: 'PANEJADO', value: filteredPlans.filter(p => p.status === 'PLANEJADO').length, color: '#137fec' },
+    { name: 'PLANEJADO', value: filteredPlans.filter(p => p.status === 'PLANEJADO').length, color: '#137fec' },
     { name: 'EM ANDAMENTO', value: filteredPlans.filter(p => p.status === 'EM ANDAMENTO').length, color: '#f97316' },
     { name: 'CONCLUÍDO', value: filteredPlans.filter(p => p.status === 'CONCLUÍDO').length, color: '#078838' },
     { name: 'SUSPENSO', value: filteredPlans.filter(p => p.status === 'SUSPENSO').length, color: '#ef4444' },
@@ -61,6 +78,18 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
     return acc;
   }, []).sort((a, b) => b.value - a.value);
 
+  const categoriasData = filteredPlans.reduce((acc: any[], plan) => {
+    (plan.categorias || []).forEach(cat => {
+      const existing = acc.find(c => c.name === cat);
+      if (existing) {
+        existing.value += 1;
+      } else {
+        acc.push({ name: cat, value: 1 });
+      }
+    });
+    return acc;
+  }, []).sort((a, b) => b.value - a.value);
+
   const linhaCuidadoData = filteredPlans.reduce((acc: any[], plan) => {
     const existing = acc.find(l => l.name === plan.linha_cuidado);
     if (existing) {
@@ -73,8 +102,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
 
   const stats = [
     { label: 'Total de Planos', value: filteredPlans.length.toString(), change: 'Total', type: 'positive', icon: 'description', color: 'blue' },
-    { label: 'Planos em Andamento', value: filteredPlans.filter(p => p.status === 'EM ANDAMENTO').length.toString(), change: 'Ativo', type: 'positive', icon: 'pending_actions', color: 'orange' },
-    { label: 'Resultados Alcançados', value: filteredPlans.filter(p => p.status === 'CONCLUÍDO').length.toString(), change: 'Sucesso', type: 'positive', icon: 'auto_graph', color: 'purple' },
+    { label: 'Taxa Resolutividade', value: `${resolutividade}%`, change: `${concludedPlans.length} Concluídos`, type: resolutividade > 50 ? 'positive' : 'negative', icon: 'auto_graph', color: 'green' },
+    { label: 'Lead Time Médio', value: `${avgLeadTime} dias`, change: 'Tempo Médio', type: 'positive', icon: 'timer', color: 'purple' },
   ];
 
   return (
@@ -86,27 +115,47 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
         </div>
 
         <div className="flex-1 flex justify-center px-0 lg:px-8">
-          <div className="w-full max-w-xl bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-700 p-1.5 shadow-lg shadow-blue-500/5 flex flex-col sm:flex-row items-center gap-2 relative">
-            <div className="flex items-center gap-2 px-3 py-1.5 border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-gray-700 w-full sm:w-auto">
-              <span className="material-symbols-outlined text-primary !text-[18px]">filter_alt</span>
-              <span className="text-[10px] font-bold text-[#617589] dark:text-gray-400 uppercase whitespace-nowrap">Linha de Cuidado</span>
+          <div className="w-full max-w-2xl bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-700 p-1.5 shadow-lg shadow-blue-500/5 flex flex-col md:flex-row items-center gap-2 relative">
+            <div className="flex items-center gap-2 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2 px-3 py-1.5 min-w-[120px]">
+                <span className="material-symbols-outlined text-primary !text-[18px]">health_and_safety</span>
+                <span className="text-[10px] font-bold text-[#617589] dark:text-gray-400 uppercase">Linha</span>
+              </div>
+              <div className="relative flex-1">
+                <select
+                  value={filterLinha}
+                  onChange={(e) => setFilterLinha(e.target.value)}
+                  className="form-select flex w-full border-none bg-transparent h-10 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none"
+                >
+                  {linhaOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[16px]">expand_more</span>
+              </div>
             </div>
 
-            <div className="relative flex-1 w-full">
-              <select
-                value={filterLinha}
-                onChange={(e) => setFilterLinha(e.target.value)}
-                className="form-select flex w-full border-none bg-gray-50/50 dark:bg-gray-800/50 rounded-xl h-10 text-xs pl-3 pr-8 appearance-none font-bold text-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer"
-              >
-                {linhaOptions.map(opt => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-              <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-primary !text-[18px]">expand_more</span>
+            <div className="flex items-center gap-2 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2 px-3 py-1.5 min-w-[100px]">
+                <span className="material-symbols-outlined text-primary !text-[18px]">account_tree</span>
+                <span className="text-[10px] font-bold text-[#617589] dark:text-gray-400 uppercase">Eixo</span>
+              </div>
+              <div className="relative flex-1">
+                <select
+                  value={filterEixo}
+                  onChange={(e) => setFilterEixo(e.target.value)}
+                  className="form-select flex w-full border-none bg-transparent h-10 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none"
+                >
+                  {eixoOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[16px]">expand_more</span>
+              </div>
             </div>
 
-            <div className="hidden sm:flex items-center px-3 py-1.5 bg-blue-50 dark:bg-blue-900/10 rounded-lg">
-              <span className="text-[10px] font-black text-primary uppercase">
+            <div className="hidden lg:flex items-center px-4 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl mr-1">
+              <span className="text-[10px] font-black text-primary uppercase whitespace-nowrap">
                 {filteredPlans.length} {filteredPlans.length === 1 ? 'PLANO' : 'PLANOS'}
               </span>
             </div>
@@ -154,19 +203,21 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
           <div className="flex flex-col gap-6">
             {[
-              { label: 'INOVAÇÃO', value: filteredPlans.filter(p => p.eixo === 'INOVAÇÃO').length, color: 'bg-primary' },
-              { label: 'QUALIFICAÇÃO', value: filteredPlans.filter(p => p.eixo === 'QUALIFICAÇÃO').length, color: 'bg-orange-500' },
-              { label: 'PROCESSO DE TRABALHO', value: filteredPlans.filter(p => p.eixo === 'PROCESSO DE TRABALHO').length, color: 'bg-green-600' },
+              { label: 'INOVAÇÃO', color: 'bg-primary' },
+              { label: 'QUALIFICAÇÃO', color: 'bg-orange-500' },
+              { label: 'PROCESSO DE TRABALHO', color: 'bg-green-600' },
             ].map((item) => {
-              const percentage = filteredPlans.length > 0 ? Math.round((item.value / filteredPlans.length) * 100) : 0;
+              const ejePlans = filteredPlans.filter(p => p.eixo === item.label);
+              const ejeConcluded = ejePlans.filter(p => p.status === 'CONCLUÍDO').length;
+              const percentage = ejePlans.length > 0 ? Math.round((ejeConcluded / ejePlans.length) * 100) : 0;
               return (
                 <div key={item.label} className="flex flex-col gap-2">
                   <div className="flex justify-between items-end">
                     <span className="text-sm font-medium text-[#111418] dark:text-white">{item.label}</span>
-                    <span className="text-sm font-bold text-[#111418] dark:text-white">{item.value} ({percentage}%)</span>
+                    <span className="text-sm font-bold text-[#111418] dark:text-white">{ejeConcluded}/{ejePlans.length} ({percentage}%)</span>
                   </div>
                   <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-                    <div className={`${item.color} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div>
+                    <div className={`${item.color} h-2.5 rounded-full transition-all duration-500`} style={{ width: `${percentage}%` }}></div>
                   </div>
                 </div>
               );
@@ -293,34 +344,34 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
         </div>
 
-        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Distribuição por Linha de Cuidado</h3>
-            <span className="material-symbols-outlined text-gray-400">analytics</span>
+            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Distribuição por Categorias</h3>
+            <span className="material-symbols-outlined text-gray-400">category</span>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 20, right: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
+              <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 20, right: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
                 <XAxis type="number" hide />
                 <YAxis
                   dataKey="name"
                   type="category"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#617589', fontSize: 12 }}
-                  width={100}
+                  tick={{ fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                  width={120}
                 />
                 <Tooltip
-                  cursor={{ fill: '#f3f4f6' }}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', background: '#fff' }}
                 />
                 <Bar
                   dataKey="value"
-                  fill="#ec4899"
+                  fill="#10b981"
                   radius={[0, 4, 4, 0]}
-                  barSize={30}
-                  label={{ position: 'right', fill: '#617589', fontSize: 12 }}
+                  barSize={24}
+                  label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
                 />
               </BarChart>
             </ResponsiveContainer>
