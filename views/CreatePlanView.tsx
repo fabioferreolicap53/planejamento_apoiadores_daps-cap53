@@ -65,20 +65,49 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     fetchOptions();
   }, []);
 
-  const handleAddOption = async (type: string) => {
+  const handleAddOption = async (type: string, autoInclude = true) => {
     const label = prompt(`Digite o novo item para ${type.replace('_', ' ').toUpperCase()}:`);
     if (label && label.trim()) {
+      const formattedLabel = label.trim().toUpperCase();
       const { error } = await supabase
         .from('config_options')
-        .insert([{ type, label: label.trim().toUpperCase() }]);
+        .insert([{ type, label: formattedLabel }]);
 
       if (error) {
         alert('Erro ao adicionar item. Verifique se já existe.');
       } else {
+        if (autoInclude) {
+          if (type === 'apoiador' && !selectedApoiadores.includes(formattedLabel)) {
+            setSelectedApoiadores([...selectedApoiadores, formattedLabel]);
+          } else if (type === 'categoria' && !selectedCategories.includes(formattedLabel)) {
+            setSelectedCategories([...selectedCategories, formattedLabel]);
+          } else if (type === 'linha_cuidado') {
+            setLinhaCuidado(formattedLabel);
+          } else if (type === 'eixo') {
+            setEixo(formattedLabel);
+          }
+        }
         fetchOptions();
       }
     }
   };
+
+  const handleHeaderAction = (type: 'apoiador' | 'categoria') => {
+    const selected = type === 'apoiador' ? supporterToManage : categoryToManage;
+    const currentList = type === 'apoiador' ? selectedApoiadores : selectedCategories;
+    const setList = type === 'apoiador' ? setSelectedApoiadores : setSelectedCategories;
+    const setManage = type === 'apoiador' ? setSupporterToManage : setCategoryToManage;
+
+    if (selected) {
+      if (!currentList.includes(selected)) {
+        setList([...currentList, selected]);
+      }
+      setManage('');
+    } else {
+      handleAddOption(type);
+    }
+  };
+
 
   const handleEditOption = async (type: string, oldLabel: string) => {
     const newLabel = prompt(`Renomear "${oldLabel}" para:`, oldLabel);
@@ -445,11 +474,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleAddOption('apoiador')}
+                        onClick={() => handleHeaderAction('apoiador')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
-                        Adicionar
+                        <span className="material-symbols-outlined text-[16px]">{supporterToManage ? 'add' : 'add_circle'}</span>
+                        {supporterToManage ? 'Incluir no Plano' : 'Adicionar Novo'}
                       </button>
                     )}
                   </div>
@@ -482,22 +511,6 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     </div>
 
                     <div className="flex gap-1">
-                      {supporterToManage && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!selectedApoiadores.includes(supporterToManage)) {
-                              setSelectedApoiadores([...selectedApoiadores, supporterToManage]);
-                              setSupporterToManage('');
-                            }
-                          }}
-                          className="size-10 flex items-center justify-center text-primary hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
-                          title="Incluir no plano"
-                        >
-                          <span className="material-symbols-outlined">add</span>
-                        </button>
-                      )}
-
                       {isAdmin && supporterToManage && (
                         <>
                           <button
@@ -625,11 +638,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleAddOption('categoria')}
+                        onClick={() => handleHeaderAction('categoria')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
-                        Adicionar
+                        <span className="material-symbols-outlined text-[16px]">{categoryToManage ? 'add' : 'add_circle'}</span>
+                        {categoryToManage ? 'Incluir no Plano' : 'Adicionar Novo'}
                       </button>
                     )}
                   </div>
@@ -662,22 +675,6 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     </div>
 
                     <div className="flex gap-1">
-                      {categoryToManage && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!selectedCategories.includes(categoryToManage)) {
-                              setSelectedCategories([...selectedCategories, categoryToManage]);
-                              setCategoryToManage('');
-                            }
-                          }}
-                          className="size-10 flex items-center justify-center text-primary hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
-                          title="Incluir no plano"
-                        >
-                          <span className="material-symbols-outlined">add</span>
-                        </button>
-                      )}
-
                       {isAdmin && categoryToManage && (
                         <>
                           <button
@@ -703,6 +700,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       )}
                     </div>
                   </div>
+
                 </div>
               )}
 
