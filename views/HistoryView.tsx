@@ -160,27 +160,28 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-4 sm:p-8 pt-6">
-        <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
-          <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm flex flex-col">
-            <div className="overflow-x-auto">
+      <div className="flex-1 flex flex-col min-h-0 p-4 sm:p-8 pt-6">
+        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 gap-6">
+          <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
-                <thead>
+                <thead className="sticky top-0 z-20">
                   <tr className="bg-[#f9fafb] dark:bg-gray-800/95 border-b border-[#e5e7eb] dark:border-gray-800 text-left backdrop-blur-md">
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Eixo</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Linha de Cuidado</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Início</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Fim</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Resumo</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Meta</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Apoiadores</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Avaliação</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Categorias</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky top-0 bg-[#f9fafb] dark:bg-gray-800 z-20">Observações</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky top-0 right-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Eixo</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Linha de Cuidado</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Início</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Fim</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Resumo</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Meta</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Apoiadores</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Avaliação</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Categorias</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Observações</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky right-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
                   </tr>
                 </thead>
+
 
 
                 <tbody className="divide-y divide-[#e5e7eb] dark:divide-gray-800">
