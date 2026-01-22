@@ -29,6 +29,10 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
   const [observacoes, setObservacoes] = useState(editingPlan?.observacoes || '');
   const [isSaving, setIsSaving] = useState(false);
 
+  // States for management UI selection
+  const [supporterToManage, setSupporterToManage] = useState('');
+  const [categoryToManage, setCategoryToManage] = useState('');
+
   const [configOptions, setConfigOptions] = useState<{
     eixo: string[];
     linha_cuidado: string[];
@@ -461,60 +465,63 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </span>
                     ))}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="relative">
+                  <div className="relative flex items-center gap-2">
+                    <div className="relative flex-1">
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val && !selectedApoiadores.includes(val)) {
-                            setSelectedApoiadores([...selectedApoiadores, val]);
-                          }
-                          e.target.value = "";
-                        }}
-                        value=""
+                        onChange={(e) => setSupporterToManage(e.target.value)}
+                        value={supporterToManage}
                       >
-                        <option value="" disabled>Adicionar apoiador(es)...</option>
+                        <option value="" disabled>Selecione um apoiador...</option>
                         {configOptions.apoiador.map(opt => (
-                          <option key={opt} value={opt} disabled={selectedApoiadores.includes(opt)}>{opt}</option>
+                          <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
 
-                    {isAdmin && (
-                      <div className="flex flex-col gap-1.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Gerenciar Opções do Sistema</span>
-                        <div className="flex gap-2">
-                          <select
-                            className="flex-1 h-10 rounded-lg border-gray-200 bg-white text-sm px-3 focus:ring-1 focus:ring-primary appearance-none font-medium"
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (val) {
-                                // Provide a temporary select for edit/delete
-                                const action = confirm(`Deseja EDITAR ou EXCLUIR "${val}"?\n\nOK para EDITAR\nCANCELAR para EXCLUIR`)
-                                  ? 'edit' : 'delete';
-                                if (action === 'edit') {
-                                  handleEditOption('apoiador', val);
-                                } else {
-                                  handleDeleteOption('apoiador', val);
-                                }
-                                e.target.value = "";
-                              }
-                            }}
+                    <div className="flex gap-1">
+                      {supporterToManage && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!selectedApoiadores.includes(supporterToManage)) {
+                              setSelectedApoiadores([...selectedApoiadores, supporterToManage]);
+                              setSupporterToManage('');
+                            }
+                          }}
+                          className="size-10 flex items-center justify-center text-primary hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                          title="Incluir no plano"
+                        >
+                          <span className="material-symbols-outlined">add</span>
+                        </button>
+                      )}
+
+                      {isAdmin && supporterToManage && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEditOption('apoiador', supporterToManage)}
+                            className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                            title="Renomear este item"
                           >
-                            <option value="">Selecione para editar/excluir...</option>
-                            {configOptions.apoiador.map(opt => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          <div className="h-10 px-3 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400">
-                            <span className="material-symbols-outlined">settings</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDeleteOption('apoiador', supporterToManage);
+                              setSupporterToManage('');
+                            }}
+                            className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
+                            title="Excluir este item permanentemente"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -638,58 +645,63 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </span>
                     ))}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="relative">
+                  <div className="relative flex items-center gap-2">
+                    <div className="relative flex-1">
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val && !selectedCategories.includes(val)) {
-                            setSelectedCategories([...selectedCategories, val]);
-                          }
-                          e.target.value = "";
-                        }}
-                        value=""
+                        onChange={(e) => setCategoryToManage(e.target.value)}
+                        value={categoryToManage}
                       >
-                        <option value="" disabled>Adicionar categoria(s)...</option>
+                        <option value="" disabled>Selecione uma categoria...</option>
                         {configOptions.categoria.map(opt => (
-                          <option key={opt} value={opt} disabled={selectedCategories.includes(opt)}>{opt}</option>
+                          <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {isAdmin && (
-                      <div className="flex flex-col gap-1.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Gerenciar Opções do Sistema</span>
-                        <div className="flex gap-2">
-                          <select
-                            className="flex-1 h-10 rounded-lg border-gray-200 bg-white text-sm px-3 focus:ring-1 focus:ring-primary appearance-none font-medium"
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (val) {
-                                const action = confirm(`Deseja EDITAR ou EXCLUIR "${val}"?\n\nOK para EDITAR\nCANCELAR para EXCLUIR`)
-                                  ? 'edit' : 'delete';
-                                if (action === 'edit') {
-                                  handleEditOption('categoria', val);
-                                } else {
-                                  handleDeleteOption('categoria', val);
-                                }
-                                e.target.value = "";
-                              }
-                            }}
+
+                    <div className="flex gap-1">
+                      {categoryToManage && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!selectedCategories.includes(categoryToManage)) {
+                              setSelectedCategories([...selectedCategories, categoryToManage]);
+                              setCategoryToManage('');
+                            }
+                          }}
+                          className="size-10 flex items-center justify-center text-primary hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                          title="Incluir no plano"
+                        >
+                          <span className="material-symbols-outlined">add</span>
+                        </button>
+                      )}
+
+                      {isAdmin && categoryToManage && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEditOption('categoria', categoryToManage)}
+                            className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                            title="Renomear este item"
                           >
-                            <option value="">Selecione para editar/excluir...</option>
-                            {configOptions.categoria.map(opt => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          <div className="h-10 px-3 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400">
-                            <span className="material-symbols-outlined">settings</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDeleteOption('categoria', categoryToManage);
+                              setCategoryToManage('');
+                            }}
+                            className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
+                            title="Excluir este item permanentemente"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
