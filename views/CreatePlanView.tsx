@@ -108,6 +108,13 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     }
   };
 
+  const handleSupporterSelect = (val: string) => {
+    if (val && !selectedApoiadores.includes(val)) {
+      setSelectedApoiadores([...selectedApoiadores, val]);
+    }
+    setSupporterToManage(''); // Reset selection
+  };
+
 
   const handleEditOption = async (type: string, oldLabel: string) => {
     const newLabel = prompt(`Renomear "${oldLabel}" para:`, oldLabel);
@@ -474,11 +481,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleHeaderAction('apoiador')}
+                        onClick={() => handleAddOption('apoiador')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">{supporterToManage ? 'add' : 'add_circle'}</span>
-                        {supporterToManage ? 'Incluir no Plano' : 'Adicionar Novo'}
+                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
+                        Adicionar Novo
                       </button>
                     )}
                   </div>
@@ -499,11 +506,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => setSupporterToManage(e.target.value)}
+                        onChange={(e) => handleSupporterSelect(e.target.value)}
                         value={supporterToManage}
                       >
                         <option value="" disabled>Selecione um apoiador...</option>
-                        {configOptions.apoiador.map(opt => (
+                        {configOptions.apoiador.filter(opt => !selectedApoiadores.includes(opt)).map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
