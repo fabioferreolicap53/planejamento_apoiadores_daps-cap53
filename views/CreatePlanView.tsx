@@ -115,6 +115,13 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     setSupporterToManage(''); // Reset selection
   };
 
+  const handleCategorySelect = (val: string) => {
+    if (val && !selectedCategories.includes(val)) {
+      setSelectedCategories([...selectedCategories, val]);
+    }
+    setCategoryToManage(''); // Reset selection
+  };
+
 
   const handleEditOption = async (type: string, oldLabel: string) => {
     const newLabel = prompt(`Renomear "${oldLabel}" para:`, oldLabel);
@@ -661,11 +668,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleHeaderAction('categoria')}
+                        onClick={() => handleAddOption('categoria')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">{categoryToManage ? 'add' : 'add_circle'}</span>
-                        {categoryToManage ? 'Incluir no Plano' : 'Adicionar Novo'}
+                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
+                        Adicionar Novo
                       </button>
                     )}
                   </div>
@@ -686,11 +693,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => setCategoryToManage(e.target.value)}
+                        onChange={(e) => handleCategorySelect(e.target.value)}
                         value={categoryToManage}
                       >
                         <option value="" disabled>Selecione uma categoria...</option>
-                        {configOptions.categoria.map(opt => (
+                        {configOptions.categoria.filter(opt => !selectedCategories.includes(opt)).map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
