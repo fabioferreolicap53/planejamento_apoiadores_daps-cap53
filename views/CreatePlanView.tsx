@@ -12,7 +12,8 @@ interface CreatePlanViewProps {
 }
 
 const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSuccess, editingPlan, profile }) => {
-  const canManage = !editingPlan || profile?.role === 'Administrador' || profile?.id === editingPlan.professional_id;
+  const isAdmin = profile?.role === 'Administrador';
+  const canManage = !editingPlan || isAdmin || profile?.id === editingPlan.professional_id;
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(editingPlan?.categorias || []);
   const [selectedApoiadores, setSelectedApoiadores] = useState<string[]>(editingPlan?.apoiadores || []);
@@ -62,10 +63,10 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
   const handleAddOption = async (type: string) => {
     const label = prompt(`Digite o novo item para ${type.replace('_', ' ').toUpperCase()}:`);
-    if (label) {
+    if (label && label.trim()) {
       const { error } = await supabase
         .from('config_options')
-        .insert([{ type, label: label.toUpperCase() }]);
+        .insert([{ type, label: label.trim().toUpperCase() }]);
 
       if (error) {
         alert('Erro ao adicionar item. Verifique se já existe.');
@@ -74,6 +75,85 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
       }
     }
   };
+
+  const handleEditOption = async (type: string, oldLabel: string) => {
+    const newLabel = prompt(`Renomear "${oldLabel}" para:`, oldLabel);
+    if (newLabel && newLabel.trim() && newLabel.trim().toUpperCase() !== oldLabel.toUpperCase()) {
+      const formattedNewLabel = newLabel.trim().toUpperCase();
+
+      // Check if the new label already exists
+      const { data: existing } = await supabase
+        .from('config_options')
+        .select('id')
+        .eq('type', type)
+        .eq('label', formattedNewLabel)
+        .single();
+
+      if (existing) {
+        alert('Este nome já existe.');
+        return;
+      }
+
+      // Update the option itself
+      const { error: updateOptError } = await supabase
+        .from('config_options')
+        .update({ label: formattedNewLabel })
+        .eq('type', type)
+        .eq('label', oldLabel);
+
+      if (updateOptError) {
+        alert('Erro ao renomear item.');
+        return;
+      }
+
+      // Update existing plans to maintain consistency
+      if (type === 'linha_cuidado') {
+        await supabase.from('plans').update({ linha_cuidado: formattedNewLabel }).eq('linha_cuidado', oldLabel);
+        if (linhaCuidado === oldLabel) setLinhaCuidado(formattedNewLabel);
+      } else if (type === 'eixo') {
+        await supabase.from('plans').update({ eixo: formattedNewLabel }).eq('eixo', oldLabel);
+        if (eixo === oldLabel) setEixo(formattedNewLabel);
+      } else if (type === 'apoiador') {
+        // Handle array update for supporters
+        const { data: plansWithSupporter } = await supabase
+          .from('plans')
+          .select('id, apoiadores')
+          .contains('apoiadores', [oldLabel]);
+
+        if (plansWithSupporter) {
+          for (const plan of plansWithSupporter) {
+            const updatedApoiadores = plan.apoiadores.map((a: string) => a === oldLabel ? formattedNewLabel : a);
+            await supabase.from('plans').update({ apoiadores: updatedApoiadores }).eq('id', plan.id);
+          }
+        }
+
+        // Update local state if needed
+        if (selectedApoiadores.includes(oldLabel)) {
+          setSelectedApoiadores(selectedApoiadores.map(a => a === oldLabel ? formattedNewLabel : a));
+        }
+      } else if (type === 'categoria') {
+        // Handle array update for categories
+        const { data: plansWithCategory } = await supabase
+          .from('plans')
+          .select('id, categorias')
+          .contains('categorias', [oldLabel]);
+
+        if (plansWithCategory) {
+          for (const plan of plansWithCategory) {
+            const updatedCats = plan.categorias.map((c: string) => c === oldLabel ? formattedNewLabel : c);
+            await supabase.from('plans').update({ categorias: updatedCats }).eq('id', plan.id);
+          }
+        }
+
+        if (selectedCategories.includes(oldLabel)) {
+          setSelectedCategories(selectedCategories.map(c => c === oldLabel ? formattedNewLabel : c));
+        }
+      }
+
+      fetchOptions();
+    }
+  };
+
 
   const handleDeleteOption = async (type: string, label: string) => {
     if (confirm(`Tem certeza que deseja excluir "${label}" de ${type.replace('_', ' ').toUpperCase()} permanentemente?`)) {
@@ -224,7 +304,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     <label className="text-[#111418] text-base font-medium uppercase">
                       EIXOS <span className="text-red-500">*</span>
                     </label>
-                    {profile?.role === 'admin' && (
+                    {isAdmin && (
                       <button
                         type="button"
                         onClick={() => handleAddOption('eixo')}
@@ -251,15 +331,25 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {profile?.role === 'admin' && eixo && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteOption('eixo', eixo)}
-                        className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
-                        title="Excluir este item permanentemente"
-                      >
-                        <span className="material-symbols-outlined">delete</span>
-                      </button>
+                    {isAdmin && eixo && (
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleEditOption('eixo', eixo)}
+                          className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                          title="Renomear este item"
+                        >
+                          <span className="material-symbols-outlined">edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteOption('eixo', eixo)}
+                          className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
+                          title="Excluir este item permanentemente"
+                        >
+                          <span className="material-symbols-outlined">delete</span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -269,7 +359,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     <label className="text-[#111418] text-base font-medium uppercase">
                       LINHA DE CUIDADO <span className="text-red-500">*</span>
                     </label>
-                    {profile?.role === 'admin' && (
+                    {isAdmin && (
                       <button
                         type="button"
                         onClick={() => handleAddOption('linha_cuidado')}
@@ -296,15 +386,25 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {profile?.role === 'admin' && linhaCuidado && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteOption('linha_cuidado', linhaCuidado)}
-                        className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
-                        title="Excluir este item permanentemente"
-                      >
-                        <span className="material-symbols-outlined">delete</span>
-                      </button>
+                    {isAdmin && linhaCuidado && (
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleEditOption('linha_cuidado', linhaCuidado)}
+                          className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                          title="Renomear este item"
+                        >
+                          <span className="material-symbols-outlined">edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteOption('linha_cuidado', linhaCuidado)}
+                          className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
+                          title="Excluir este item permanentemente"
+                        >
+                          <span className="material-symbols-outlined">delete</span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -338,7 +438,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     <label className="text-[#111418] text-base font-medium uppercase">
                       APOIADOR(ES) ENVOLVIDO(S) <span className="text-red-500">*</span>
                     </label>
-                    {profile?.role === 'admin' && (
+                    {isAdmin && (
                       <button
                         type="button"
                         onClick={() => handleAddOption('apoiador')}
@@ -361,8 +461,8 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </span>
                     ))}
                   </div>
-                  <div className="relative flex items-center gap-2">
-                    <div className="relative flex-1">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
@@ -382,25 +482,38 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {/* For Apoiadores, we delete from the selection above or from the system via a list in the future. 
-                        But the user asked for deletion. Let's provide a way to delete the available options too.
-                    */}
-                    {profile?.role === 'admin' && (
-                      <select
-                        className="size-10 rounded-lg border border-red-100 bg-red-50 text-red-500 appearance-none text-center cursor-pointer"
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            handleDeleteOption('apoiador', e.target.value);
-                            e.target.value = "";
-                          }
-                        }}
-                        title="Excluir um apoiador do sistema"
-                      >
-                        <option value="">🗑️</option>
-                        {configOptions.apoiador.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
+
+                    {isAdmin && (
+                      <div className="flex flex-col gap-1.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Gerenciar Opções do Sistema</span>
+                        <div className="flex gap-2">
+                          <select
+                            className="flex-1 h-10 rounded-lg border-gray-200 bg-white text-sm px-3 focus:ring-1 focus:ring-primary appearance-none font-medium"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (val) {
+                                // Provide a temporary select for edit/delete
+                                const action = confirm(`Deseja EDITAR ou EXCLUIR "${val}"?\n\nOK para EDITAR\nCANCELAR para EXCLUIR`)
+                                  ? 'edit' : 'delete';
+                                if (action === 'edit') {
+                                  handleEditOption('apoiador', val);
+                                } else {
+                                  handleDeleteOption('apoiador', val);
+                                }
+                                e.target.value = "";
+                              }
+                            }}
+                          >
+                            <option value="">Selecione para editar/excluir...</option>
+                            {configOptions.apoiador.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <div className="h-10 px-3 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400">
+                            <span className="material-symbols-outlined">settings</span>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -502,7 +615,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
                     <label className="text-[#111418] text-base font-medium uppercase">CATEGORIA(S) A CAPACITAR (QUALIFICAÇÃO)</label>
-                    {profile?.role === 'admin' && (
+                    {isAdmin && (
                       <button
                         type="button"
                         onClick={() => handleAddOption('categoria')}
@@ -525,8 +638,8 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </span>
                     ))}
                   </div>
-                  <div className="relative flex items-center gap-2">
-                    <div className="relative flex-1">
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
@@ -546,22 +659,36 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {profile?.role === 'admin' && (
-                      <select
-                        className="size-10 rounded-lg border border-red-100 bg-red-50 text-red-500 appearance-none text-center cursor-pointer"
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            handleDeleteOption('categoria', e.target.value);
-                            e.target.value = "";
-                          }
-                        }}
-                        title="Excluir uma categoria do sistema"
-                      >
-                        <option value="">🗑️</option>
-                        {configOptions.categoria.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
+                    {isAdmin && (
+                      <div className="flex flex-col gap-1.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Gerenciar Opções do Sistema</span>
+                        <div className="flex gap-2">
+                          <select
+                            className="flex-1 h-10 rounded-lg border-gray-200 bg-white text-sm px-3 focus:ring-1 focus:ring-primary appearance-none font-medium"
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              if (val) {
+                                const action = confirm(`Deseja EDITAR ou EXCLUIR "${val}"?\n\nOK para EDITAR\nCANCELAR para EXCLUIR`)
+                                  ? 'edit' : 'delete';
+                                if (action === 'edit') {
+                                  handleEditOption('categoria', val);
+                                } else {
+                                  handleDeleteOption('categoria', val);
+                                }
+                                e.target.value = "";
+                              }
+                            }}
+                          >
+                            <option value="">Selecione para editar/excluir...</option>
+                            {configOptions.categoria.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <div className="h-10 px-3 flex items-center justify-center bg-gray-100 rounded-lg text-gray-400">
+                            <span className="material-symbols-outlined">settings</span>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
