@@ -82,90 +82,92 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 sm:p-8">
-        <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
-          <div className="flex flex-col gap-4 bg-white dark:bg-[#1a2634] p-6 rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm">
-            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between w-full">
-              <div className="w-full lg:w-96">
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px]">search</span>
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-10 text-sm"
-                    placeholder="Buscar por linha, eixo, resumo ou ID..."
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={clearFilters}
-                  className="flex h-10 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
-                  <span>Limpar Filtros</span>
-                </button>
+      <div className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-4 sm:pt-2 sm:pb-6 flex flex-col gap-4">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between w-full">
+            <div className="w-full lg:w-96">
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px]">search</span>
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-10 text-sm"
+                  placeholder="Buscar por linha, eixo, resumo ou ID..."
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
-                <div className="relative">
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
-                  >
-                    {statusOptions.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
-                <div className="relative">
-                  <select
-                    value={filterEixo}
-                    onChange={(e) => setFilterEixo(e.target.value)}
-                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
-                  >
-                    {eixoOptions.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
-                <div className="relative">
-                  <select
-                    value={filterLinha}
-                    onChange={(e) => setFilterLinha(e.target.value)}
-                    className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
-                  >
-                    {linhaOptions.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearFilters}
+                className="flex h-10 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
+                <span>Limpar Filtros</span>
+              </button>
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
+              <div className="relative">
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                >
+                  {statusOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
+              <div className="relative">
+                <select
+                  value={filterEixo}
+                  onChange={(e) => setFilterEixo(e.target.value)}
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                >
+                  {eixoOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
+              <div className="relative">
+                <select
+                  value={filterLinha}
+                  onChange={(e) => setFilterLinha(e.target.value)}
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                >
+                  {linhaOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-auto p-4 sm:p-8 pt-6">
+        <div className="max-w-7xl mx-auto w-full flex flex-col gap-6">
           <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto overflow-y-visible">
               <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#f9fafb] dark:bg-gray-800/50 border-b border-[#e5e7eb] dark:border-gray-800 text-left">
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
+                <thead className="sticky top-0 z-20">
+                  <tr className="bg-[#f9fafb] dark:bg-gray-800/90 border-b border-[#e5e7eb] dark:border-gray-800 text-left backdrop-blur-sm">
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Eixo</th>
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Linha de Cuidado</th>
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Início</th>
@@ -176,9 +178,10 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Avaliação</th>
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Categorias</th>
                     <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589]">Observações</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky right-0 bg-[#f9fafb] dark:bg-gray-800 z-10 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
+                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky right-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
                   </tr>
                 </thead>
+
                 <tbody className="divide-y divide-[#e5e7eb] dark:divide-gray-800">
                   {filteredPlans.map((plan) => (
                     <tr key={plan.id} className="group hover:bg-[#f0f9ff] dark:hover:bg-blue-900/10 transition-colors">
