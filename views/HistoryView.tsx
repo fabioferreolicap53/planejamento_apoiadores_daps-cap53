@@ -65,33 +65,34 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   return (
     <div className="flex flex-col h-full">
       <header className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0 z-10">
-        <div className="px-4 sm:px-8 py-4 sm:py-6 max-w-7xl mx-auto w-full">
+        <div className="px-4 sm:px-8 py-3 sm:py-4 max-w-7xl mx-auto w-full">
           <div className="flex flex-wrap justify-between items-end gap-3 sm:gap-4">
-            <div className="flex flex-col gap-1 sm:gap-2">
-              <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl font-black tracking-tighter">Histórico de Planos</h1>
-              <p className="text-[#617589] dark:text-gray-400 text-sm sm:text-base">Revise e gerencie seu arquivo de planos registrados.</p>
+            <div className="flex flex-col">
+              <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl font-black tracking-tighter">Histórico de Planos</h1>
+              <p className="text-[#617589] dark:text-gray-400 text-xs sm:text-sm">Revise e gerencie seu arquivo de planos registrados.</p>
             </div>
             <button
               onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex w-full sm:w-auto items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-sm transition-colors"
+              className="flex w-full sm:w-auto items-center justify-center rounded-lg h-9 px-4 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-sm transition-colors"
             >
-              <span className="material-symbols-outlined text-[20px]">add</span>
+              <span className="material-symbols-outlined text-[18px]">add</span>
               <span>Criar Novo Plano</span>
             </button>
           </div>
         </div>
       </header>
 
+
       <div className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0">
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-4 sm:pt-2 sm:pb-6 flex flex-col gap-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between w-full">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-3 sm:pt-1 sm:pb-4 flex flex-col gap-3">
+          <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between w-full">
             <div className="w-full lg:w-96">
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px]">search</span>
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[18px]">search</span>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-10 text-sm"
+                  className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-9 text-sm"
                   placeholder="Buscar por linha, eixo, resumo ou ID..."
                 />
               </div>
@@ -100,22 +101,22 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             <div className="flex items-center gap-2">
               <button
                 onClick={clearFilters}
-                className="flex h-10 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
+                className="flex h-9 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
               >
-                <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
+                <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
                 <span>Limpar Filtros</span>
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
               <div className="relative">
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
                 >
                   {statusOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -125,13 +126,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
               <div className="relative">
                 <select
                   value={filterEixo}
                   onChange={(e) => setFilterEixo(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
                 >
                   {eixoOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -141,13 +142,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
+            <div className="flex flex-col gap-1">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
               <div className="relative">
                 <select
                   value={filterLinha}
                   onChange={(e) => setFilterLinha(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-10 text-sm pl-4 pr-10 appearance-none font-medium"
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
                 >
                   {linhaOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -160,27 +161,29 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0 p-4 sm:p-8 pt-6">
-        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 gap-6">
+
+      <div className="flex-1 flex flex-col min-h-0 p-4 sm:px-8 py-4">
+        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 gap-4">
           <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
             <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-20">
                   <tr className="bg-[#f9fafb] dark:bg-gray-800/95 border-b border-[#e5e7eb] dark:border-gray-800 text-left backdrop-blur-md">
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Eixo</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Linha de Cuidado</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Início</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Fim</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Resumo</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Meta</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Apoiadores</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Avaliação</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Categorias</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Observações</th>
-                    <th className="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky right-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Status</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Eixo</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Linha de Cuidado</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Início</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Fim</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Resumo</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Meta</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Apoiadores</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Avaliação</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Categorias</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Observações</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-right text-[#617589] sticky right-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[-2px_0_5px_rgba(0,0,0,0.05)]">Ações</th>
                   </tr>
                 </thead>
+
 
 
 
