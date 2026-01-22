@@ -340,7 +340,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
             <form className="flex flex-col gap-5 sm:gap-6" onSubmit={handleSave}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center min-h-[24px]">
                     <label className="text-[#111418] text-base font-medium uppercase">
                       EIXOS <span className="text-red-500">*</span>
                     </label>
@@ -395,7 +395,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center min-h-[24px]">
                     <label className="text-[#111418] text-base font-medium uppercase">
                       LINHA DE CUIDADO <span className="text-red-500">*</span>
                     </label>
@@ -452,9 +452,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">
-                    STATUS <span className="text-red-500">*</span>
-                  </label>
+                  <div className="flex justify-between items-center min-h-[24px]">
+                    <label className="text-[#111418] text-base font-medium uppercase">
+                      STATUS <span className="text-red-500">*</span>
+                    </label>
+                  </div>
                   <div className="relative">
                     <select
                       value={status}
@@ -474,7 +476,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center min-h-[24px]">
                     <label className="text-[#111418] text-base font-medium uppercase">
                       APOIADOR(ES) ENVOLVIDO(S) <span className="text-red-500">*</span>
                     </label>
@@ -489,18 +491,20 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       </button>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2 mb-1">
-                    {selectedApoiadores.map(name => (
-                      <span key={name} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-primary text-xs font-bold rounded-md border border-blue-100 shadow-sm">
-                        {name}
-                        {canManage && (
-                          <button type="button" onClick={() => toggleSelection(name, selectedApoiadores, setSelectedApoiadores)} className="hover:text-red-500 flex items-center">
-                            <span className="material-symbols-outlined text-[16px]">close</span>
-                          </button>
-                        )}
-                      </span>
-                    ))}
-                  </div>
+                  {selectedApoiadores.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-1">
+                      {selectedApoiadores.map(name => (
+                        <span key={name} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-primary text-xs font-bold rounded-md border border-blue-100 shadow-sm">
+                          {name}
+                          {canManage && (
+                            <button type="button" onClick={() => toggleSelection(name, selectedApoiadores, setSelectedApoiadores)} className="hover:text-red-500 flex items-center">
+                              <span className="material-symbols-outlined text-[16px]">close</span>
+                            </button>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <div className="relative flex items-center gap-2">
                     <div className="relative flex-1">
                       <select
@@ -547,9 +551,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[#111418] text-base font-medium uppercase">
-                  RESUMO DO PLANEJAMENTO <span className="text-red-500">*</span>
-                </label>
+                <div className="flex justify-between items-center min-h-[24px]">
+                  <label className="text-[#111418] text-base font-medium uppercase">
+                    RESUMO DO PLANEJAMENTO <span className="text-red-500">*</span>
+                  </label>
+                </div>
                 <textarea
                   className="form-textarea w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary/50 h-32 disabled:bg-gray-50 disabled:text-gray-500"
                   placeholder="Descreva um resumo das ações planejadas..."
@@ -561,7 +567,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[#111418] text-base font-medium uppercase">META / OBJETIVO</label>
+                <div className="flex justify-between items-center min-h-[24px]">
+                  <label className="text-[#111418] text-base font-medium uppercase">META / OBJETIVO</label>
+                </div>
                 <input
                   className="form-input w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary/50 h-14 disabled:bg-gray-50 disabled:text-gray-500"
                   placeholder="Ex: Melhorar protocolos de comunicação da equipe"
@@ -575,7 +583,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">AVALIAÇÃO PERIÓDICA</label>
+                  <div className="flex justify-between items-center min-h-[24px]">
+                    <label className="text-[#111418] text-base font-medium uppercase">AVALIAÇÃO PERIÓDICA</label>
+                  </div>
                   <div className="relative">
                     <select
                       value={avaliacao}
@@ -593,7 +603,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                 </div>
                 {eixo === 'PROCESSO DE TRABALHO' && (
                   <div className="flex flex-col gap-2">
-                    <label className="text-[#111418] text-base font-medium uppercase">CICLO DE AGENDA PADRÃO</label>
+                    <div className="flex justify-between items-center min-h-[24px]">
+                      <label className="text-[#111418] text-base font-medium uppercase">CICLO DE AGENDA PADRÃO</label>
+                    </div>
                     <div className="relative">
                       <select
                         value={ciclo}
@@ -614,9 +626,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">
-                    DATA INICIAL <span className="text-red-500">*</span>
-                  </label>
+                  <div className="flex justify-between items-center min-h-[24px]">
+                    <label className="text-[#111418] text-base font-medium uppercase">
+                      DATA INICIAL <span className="text-red-500">*</span>
+                    </label>
+                  </div>
                   <input
                     className="form-input w-full rounded-lg border-gray-300 h-14 disabled:bg-gray-50 disabled:text-gray-500"
                     type="date"
@@ -627,7 +641,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[#111418] text-base font-medium uppercase">DATA FINAL</label>
+                  <div className="flex justify-between items-center min-h-[24px]">
+                    <label className="text-[#111418] text-base font-medium uppercase">DATA FINAL</label>
+                  </div>
                   <input
                     className="form-input w-full rounded-lg border-gray-300 h-14 disabled:bg-gray-50 disabled:text-gray-500"
                     type="date"
@@ -640,7 +656,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
               {eixo === 'QUALIFICAÇÃO' && (
                 <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center min-h-[24px]">
                     <label className="text-[#111418] text-base font-medium uppercase">CATEGORIA(S) A CAPACITAR (QUALIFICAÇÃO)</label>
                     {isAdmin && (
                       <button
@@ -712,7 +728,9 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
               )}
 
               <div className="flex flex-col gap-2">
-                <label className="text-[#111418] text-base font-medium uppercase">OBSERVAÇÕES</label>
+                <div className="flex justify-between items-center min-h-[24px]">
+                  <label className="text-[#111418] text-base font-medium uppercase">OBSERVAÇÕES</label>
+                </div>
                 <textarea
                   className="form-textarea w-full rounded-lg border-gray-300 h-32 disabled:bg-gray-50 disabled:text-gray-500"
                   placeholder="Adicione quaisquer notas adicionais, restrições ou requisitos aqui..."
