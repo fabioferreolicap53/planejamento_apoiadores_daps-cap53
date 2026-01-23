@@ -233,12 +233,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-20">
                   <tr className="bg-[#f9fafb] dark:bg-gray-800/95 border-b border-[#e5e7eb] dark:border-gray-800 text-left backdrop-blur-md">
-                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Resumo</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Planejamento (Resumo)</th>
+                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Status</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Eixo</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Linha de Cuidado</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Início</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Fim</th>
-                    <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Status</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Meta</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Apoiadores</th>
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] bg-[#f9fafb] dark:bg-gray-800">Avaliação</th>
@@ -258,6 +258,15 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                         <div className="text-sm text-[#111418] dark:text-white font-bold line-clamp-2 leading-relaxed" title={plan.resumo}>
                           {plan.resumo}
                         </div>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold border uppercase ${STATUS_COLORS[plan.status]}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${plan.status === 'CONCLUÍDO' ? 'bg-emerald-500' :
+                            plan.status === 'EM ANDAMENTO' ? 'bg-amber-500' :
+                              plan.status === 'PLANEJADO' ? 'bg-blue-500' : 'bg-red-500'
+                            }`}></span>
+                          {plan.status}
+                        </span>
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap">
                         <div className="text-sm font-semibold text-primary">{plan.eixo}</div>
@@ -280,15 +289,6 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                           {plan.data_final ? new Date(plan.data_final).toLocaleDateString('pt-BR') : '-'}
                         </div>
-                      </td>
-                      <td className="py-4 px-6 whitespace-nowrap">
-                        <span className={`inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold border uppercase ${STATUS_COLORS[plan.status]}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${plan.status === 'CONCLUÍDO' ? 'bg-emerald-500' :
-                            plan.status === 'EM ANDAMENTO' ? 'bg-amber-500' :
-                              plan.status === 'PLANEJADO' ? 'bg-blue-500' : 'bg-red-500'
-                            }`}></span>
-                          {plan.status}
-                        </span>
                       </td>
                       <td className="py-4 px-6 min-w-[250px]">
                         <div className="text-sm text-[#617589] line-clamp-2 italic" title={plan.meta}>
