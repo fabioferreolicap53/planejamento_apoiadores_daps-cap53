@@ -17,15 +17,18 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
   const [filterLinha, setFilterLinha] = React.useState<string>('Todos');
   const [filterEixo, setFilterEixo] = React.useState<string>('Todos');
+  const [filterApoiador, setFilterApoiador] = React.useState<string>('Todos');
 
   // Derive unique options for filters
   const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
   const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))].sort();
+  const apoiadorOptions = ['Todos', ...new Set(plans.flatMap(p => p.apoiadores))].sort();
 
   // Filter plans based on selection
   const filteredPlans = plans.filter(p =>
     (filterLinha === 'Todos' || p.linha_cuidado === filterLinha) &&
-    (filterEixo === 'Todos' || p.eixo === filterEixo)
+    (filterEixo === 'Todos' || p.eixo === filterEixo) &&
+    (filterApoiador === 'Todos' || p.apoiadores.includes(filterApoiador))
   );
 
   // New Metrics Calculations
@@ -107,55 +110,74 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   ];
 
   return (
-    <div className="p-6 md:p-10 max-w-[1200px] mx-auto flex flex-col gap-6">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-8 gap-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-[#111418] dark:text-white text-2xl sm:text-3xl md:text-4xl font-black tracking-tight">Painel</h1>
-          <p className="text-[#617589] dark:text-gray-400 text-xs font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
+    <div className="p-4 md:p-6 lg:p-8 max-w-[1400px] mx-auto flex flex-col gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4 gap-4">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl md:text-3xl font-black tracking-tight">Painel</h1>
+          <p className="text-[#617589] dark:text-gray-400 text-[10px] font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
         </div>
 
-        <div className="flex-1 flex justify-center px-0 lg:px-8">
-          <div className="w-full max-w-2xl bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-700 p-1.5 shadow-lg shadow-blue-500/5 flex flex-col md:flex-row items-center gap-2 relative">
-            <div className="flex items-center gap-2 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2 px-3 py-1.5 min-w-[120px]">
-                <span className="material-symbols-outlined text-primary !text-[18px]">health_and_safety</span>
-                <span className="text-[10px] font-bold text-[#617589] dark:text-gray-400 uppercase">Linha</span>
+        <div className="flex-1 flex justify-center px-0 lg:px-4">
+          <div className="w-full max-w-4xl bg-white dark:bg-[#1A2633] rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 shadow-md shadow-blue-500/5 flex flex-col md:flex-row items-center gap-1 relative">
+            <div className="flex items-center gap-1.5 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-1.5 px-2 py-1 min-w-[90px]">
+                <span className="material-symbols-outlined text-primary !text-[16px]">health_and_safety</span>
+                <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase">Linha</span>
               </div>
               <div className="relative flex-1">
                 <select
                   value={filterLinha}
                   onChange={(e) => setFilterLinha(e.target.value)}
-                  className="form-select flex w-full border-none bg-transparent h-10 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none"
+                  className="form-select flex w-full border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none px-0"
                 >
                   {linhaOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
-                <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[16px]">expand_more</span>
+                <span className="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[14px]">expand_more</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2 px-3 py-1.5 min-w-[100px]">
-                <span className="material-symbols-outlined text-primary !text-[18px]">account_tree</span>
-                <span className="text-[10px] font-bold text-[#617589] dark:text-gray-400 uppercase">Eixo</span>
+            <div className="flex items-center gap-1.5 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-1.5 px-2 py-1 min-w-[80px]">
+                <span className="material-symbols-outlined text-primary !text-[16px]">account_tree</span>
+                <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase">Eixo</span>
               </div>
               <div className="relative flex-1">
                 <select
                   value={filterEixo}
                   onChange={(e) => setFilterEixo(e.target.value)}
-                  className="form-select flex w-full border-none bg-transparent h-10 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none"
+                  className="form-select flex w-full border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none px-0"
                 >
                   {eixoOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
-                <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[16px]">expand_more</span>
+                <span className="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[14px]">expand_more</span>
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center px-4 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl mr-1">
-              <span className="text-[10px] font-black text-primary uppercase whitespace-nowrap">
+            <div className="flex items-center gap-1.5 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-1.5 px-2 py-1 min-w-[100px]">
+                <span className="material-symbols-outlined text-primary !text-[16px]">group</span>
+                <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase">Apoiador</span>
+              </div>
+              <div className="relative flex-1">
+                <select
+                  value={filterApoiador}
+                  onChange={(e) => setFilterApoiador(e.target.value)}
+                  className="form-select flex w-full border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 cursor-pointer appearance-none px-0"
+                >
+                  {apoiadorOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-primary/50 !text-[14px]">expand_more</span>
+              </div>
+            </div>
+
+            <div className="hidden xl:flex items-center px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-lg mr-1">
+              <span className="text-[9px] font-black text-primary uppercase whitespace-nowrap">
                 {filteredPlans.length} {filteredPlans.length === 1 ? 'PLANO' : 'PLANOS'}
               </span>
             </div>
@@ -164,26 +186,26 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
 
         <button
           onClick={() => onNavigate(View.CREATE_PLAN)}
-          className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-6 h-12 font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95 whitespace-nowrap"
+          className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-4 h-10 text-sm font-bold transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap"
         >
-          <span className="material-symbols-outlined text-[22px]">add</span>
+          <span className="material-symbols-outlined text-[20px]">add</span>
           <span className="hidden sm:inline">Novo Plano</span>
           <span className="sm:hidden">Novo</span>
         </button>
       </div>
 
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {stats.map((stat) => (
-          <div key={stat.label} className="p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm relative overflow-hidden group">
-            <div className={`absolute right-[-10px] top-[-10px] bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-full p-8 transition-transform group-hover:scale-110`}>
-              <span className={`material-symbols-outlined text-${stat.color}-500 text-4xl opacity-20`}>{stat.icon}</span>
+          <div key={stat.label} className="p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm relative overflow-hidden group">
+            <div className={`absolute right-[-8px] top-[-8px] bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-full p-6 transition-transform group-hover:scale-110`}>
+              <span className={`material-symbols-outlined text-${stat.color}-500 text-3xl opacity-20`}>{stat.icon}</span>
             </div>
-            <div className="flex flex-col gap-1 relative z-10">
-              <p className="text-[#617589] dark:text-gray-400 text-sm font-semibold uppercase tracking-wider">{stat.label}</p>
+            <div className="flex flex-col gap-0.5 relative z-10">
+              <p className="text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">{stat.label}</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-[#111418] dark:text-white text-3xl font-bold">{stat.value}</span>
-                <span className={`px-2 py-0.5 rounded-md text-xs font-bold ${stat.type === 'positive' ? 'text-[#078838] bg-green-100 dark:bg-green-900/30' : 'text-orange-600 bg-orange-100 dark:bg-orange-900/30'
+                <span className="text-[#111418] dark:text-white text-2xl font-bold">{stat.value}</span>
+                <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold ${stat.type === 'positive' ? 'text-[#078838] bg-green-100 dark:bg-green-900/30' : 'text-orange-600 bg-orange-100 dark:bg-orange-900/30'
                   }`}>
                   {stat.change}
                 </span>
@@ -194,11 +216,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Taxas de Conclusão de Iniciativa</h3>
+        <div className="flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[#111418] dark:text-white text-base font-bold">Taxas de Conclusão de Iniciativa</h3>
             <button className="text-[#617589] hover:text-primary p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="material-symbols-outlined text-xl">more_horiz</span>
+              <span className="material-symbols-outlined text-lg">more_horiz</span>
             </button>
           </div>
           <div className="flex flex-col gap-6">
@@ -225,11 +247,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
         </div>
 
-        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Visão Geral do Status do Plano</h3>
+        <div className="flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-[#111418] dark:text-white text-base font-bold">Visão Geral do Status do Plano</h3>
             <button className="text-[#617589] hover:text-primary p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="material-symbols-outlined text-xl">filter_list</span>
+              <span className="material-symbols-outlined text-lg">filter_list</span>
             </button>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 h-full py-4">
@@ -270,15 +292,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
         </div>
       </div>
 
-      <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex flex-col gap-1">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Progressão Temporal de Planos</h3>
-            <p className="text-[#617589] dark:text-gray-400 text-sm">Volume de planos iniciados por mês/ano</p>
+      <div className="flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-0.5">
+            <h3 className="text-[#111418] dark:text-white text-base font-bold">Progressão Temporal de Planos</h3>
+            <p className="text-[#617589] dark:text-gray-400 text-xs">Volume de planos iniciados por mês/ano</p>
           </div>
-          <span className="material-symbols-outlined text-gray-400">calendar_month</span>
+          <span className="material-symbols-outlined text-gray-400 text-lg">calendar_month</span>
         </div>
-        <div className="h-[300px] w-full">
+        <div className="h-[220px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={temporalData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
@@ -309,13 +331,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Planos por Apoiador</h3>
-            <span className="material-symbols-outlined text-gray-400">groups</span>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[#111418] dark:text-white text-base font-bold">Planos por Apoiador</h3>
+            <span className="material-symbols-outlined text-gray-400 text-lg">groups</span>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 20, right: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
@@ -344,12 +366,12 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
         </div>
 
-        <div className="flex flex-col p-6 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[#111418] dark:text-white text-lg font-bold">Distribuição por Categorias</h3>
-            <span className="material-symbols-outlined text-gray-400">category</span>
+        <div className="flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[#111418] dark:text-white text-base font-bold">Distribuição por Categorias</h3>
+            <span className="material-symbols-outlined text-gray-400 text-lg">category</span>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 20, right: 30 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
@@ -389,39 +411,50 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
             <table className="w-full text-left border-collapse">
               <thead className="bg-gray-50 dark:bg-gray-800/50">
                 <tr>
-                  <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider">Linha de Cuidado</th>
-                  <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider">Eixo</th>
-                  <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider">Registrado</th>
-                  <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider text-right">Ação</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Linha de Cuidado</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Eixo</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Apoiadores</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Registrado</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider text-right">Ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#dbe0e6] dark:divide-gray-700">
-                {filteredPlans.slice(0, 5).map((plan) => (
+                {filteredPlans.slice(0, 8).map((plan) => (
                   <tr key={plan.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-blue-100 text-blue-700">
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold bg-blue-100 text-blue-700">
                           {plan.linha_cuidado.substring(0, 2).toUpperCase()}
                         </div>
-                        <p className="text-[#111418] dark:text-white text-sm font-medium">{plan.linha_cuidado}</p>
+                        <p className="text-[#111418] dark:text-white text-[11px] font-medium truncate max-w-[150px]">{plan.linha_cuidado}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-[#617589] dark:text-gray-300 text-sm">{plan.eixo}</td>
-                    <td className="px-6 py-4 text-[#617589] dark:text-gray-400 text-sm">
+                    <td className="px-4 py-2.5 text-[#617589] dark:text-gray-300 text-[11px] font-bold">{plan.eixo}</td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex flex-wrap gap-1">
+                        {plan.apoiadores.slice(0, 2).map(a => (
+                          <span key={a} className="px-1.5 py-0.5 bg-gray-50 dark:bg-gray-800 text-[9px] rounded text-gray-500 font-bold border border-gray-100 dark:border-gray-700">
+                            {a}
+                          </span>
+                        ))}
+                        {plan.apoiadores.length > 2 && <span className="text-[9px] text-gray-400">+{plan.apoiadores.length - 2}</span>}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 text-[#617589] dark:text-gray-400 text-[11px]">
                       {plan.created_at ? new Date(plan.created_at).toLocaleDateString('pt-BR') : '-'}
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${STATUS_COLORS[plan.status]}`}>
+                    <td className="px-4 py-2.5">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold border ${STATUS_COLORS[plan.status]}`}>
                         {plan.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-2.5 text-right">
                       <button
                         onClick={() => setSelectedPlan(plan)}
                         className="text-[#617589] hover:text-primary dark:text-gray-400 transition-colors"
                       >
-                        <span className="material-symbols-outlined text-[20px]">visibility</span>
+                        <span className="material-symbols-outlined text-[18px]">visibility</span>
                       </button>
                     </td>
                   </tr>

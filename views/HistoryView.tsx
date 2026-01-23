@@ -21,6 +21,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   const [filterStatus, setFilterStatus] = useState<string>('Todos');
   const [filterEixo, setFilterEixo] = useState<string>('Todos');
   const [filterLinha, setFilterLinha] = useState<string>('Todos');
+  const [filterApoiador, setFilterApoiador] = useState<string>('Todos');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
@@ -29,9 +30,10 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   };
 
   // Derive unique options for filters from the plans list
-  const statusOptions = ['Todos', ...new Set(plans.map(p => p.status))];
-  const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))];
-  const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))];
+  const statusOptions = ['Todos', ...new Set(plans.map(p => p.status))].sort();
+  const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))].sort();
+  const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
+  const apoiadorOptions = ['Todos', ...new Set(plans.flatMap(p => p.apoiadores))].sort();
 
   const filteredPlans = plans.filter(p => {
     const matchesSearch =
@@ -44,6 +46,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     const matchesStatus = filterStatus === 'Todos' || p.status === filterStatus;
     const matchesEixo = filterEixo === 'Todos' || p.eixo === filterEixo;
     const matchesLinha = filterLinha === 'Todos' || p.linha_cuidado === filterLinha;
+    const matchesApoiador = filterApoiador === 'Todos' || p.apoiadores.includes(filterApoiador);
 
     const planDate = p.data_inicial ? new Date(p.data_inicial).getTime() : null;
     const start = startDate ? new Date(startDate).getTime() : null;
@@ -52,7 +55,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     const matchesDate = (!start || (planDate && planDate >= start)) &&
       (!end || (planDate && planDate <= end));
 
-    return matchesSearch && matchesStatus && matchesEixo && matchesLinha && matchesDate;
+    return matchesSearch && matchesStatus && matchesEixo && matchesLinha && matchesApoiador && matchesDate;
   });
 
   const handleDelete = async (id: string) => {
@@ -69,6 +72,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     setFilterStatus('Todos');
     setFilterEixo('Todos');
     setFilterLinha('Todos');
+    setFilterApoiador('Todos');
     setStartDate('');
     setEndDate('');
   };
@@ -127,7 +131,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
               <div className="relative">
@@ -169,6 +173,22 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                   className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
                 >
                   {linhaOptions.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Apoiador</label>
+              <div className="relative">
+                <select
+                  value={filterApoiador}
+                  onChange={(e) => setFilterApoiador(e.target.value)}
+                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
+                >
+                  {apoiadorOptions.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
