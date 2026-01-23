@@ -343,7 +343,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Planos por Apoiador</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">groups</span>
             </div>
-            <div className="h-[300px] w-full">
+            <div className="h-[450px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 10, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
@@ -353,6 +353,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
+                    interval={0}
                     tick={{ fill: '#617589', fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
                     width={160}
                   />
@@ -384,7 +385,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Distribuição por Categorias</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">category</span>
             </div>
-            <div className="h-[300px] w-full">
+            <div className="h-[350px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
@@ -394,6 +395,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
+                    interval={0}
                     tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                     width={180}
                   />
@@ -453,7 +455,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linha de Cuidado</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">bar_chart</span>
             </div>
-            <div className="h-[300px] w-full">
+            <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
@@ -463,6 +465,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
+                    interval={0}
                     tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                     width={200}
                   />
