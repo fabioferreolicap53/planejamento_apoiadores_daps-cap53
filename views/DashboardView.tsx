@@ -19,6 +19,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   const [filterLinha, setFilterLinha] = React.useState<string>('Todos');
   const [filterEixo, setFilterEixo] = React.useState<string>('Todos');
   const [filterApoiador, setFilterApoiador] = React.useState<string>('Todos');
+  const [isClearing, setIsClearing] = React.useState(false);
+
+  const clearFilters = () => {
+    setIsClearing(true);
+    setFilterLinha('Todos');
+    setFilterEixo('Todos');
+    setFilterApoiador('Todos');
+    setTimeout(() => setIsClearing(false), 300);
+  };
 
   // Derive unique options for filters
   const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
@@ -150,6 +159,16 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                 </span>
               </div>
             </div>
+
+            <button
+              onClick={clearFilters}
+              disabled={filterLinha === 'Todos' && filterEixo === 'Todos' && filterApoiador === 'Todos'}
+              className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-xs font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+              title="Limpar todos os filtros"
+            >
+              <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
+              <span className="hidden xl:inline">Limpar</span>
+            </button>
           </div>
 
           <button
@@ -479,52 +498,63 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           <div className="overflow-hidden rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-[#1A2633] shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-gray-50 dark:bg-gray-800/50">
+                <thead className="bg-[#f9fafb] dark:bg-gray-800/80 border-b border-[#e5e7eb] dark:border-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Linha de Cuidado</th>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Eixo</th>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Apoiadores</th>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Registrado</th>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider text-right">Ação</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Linha de Cuidado</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Eixo</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Apoiadores</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Registrado</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Status</th>
+                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-right">Ação</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#dbe0e6] dark:divide-gray-700">
                   {filteredPlans.slice(0, 8).map((plan) => (
-                    <tr key={plan.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <td className="px-4 py-2.5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold bg-blue-100 text-blue-700">
+                    <tr key={plan.id} className="group hover:bg-gray-50/80 dark:hover:bg-gray-800/40 transition-all duration-200">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-primary border border-blue-100/50 dark:border-blue-800/30 transition-transform group-hover:scale-110">
                             {plan.linha_cuidado.substring(0, 2).toUpperCase()}
                           </div>
-                          <p className="text-[#111418] dark:text-white text-[11px] font-medium truncate max-w-[150px]">{plan.linha_cuidado}</p>
+                          <p className="text-[#111418] dark:text-white text-xs font-bold truncate max-w-[200px]">{plan.linha_cuidado}</p>
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 text-[#617589] dark:text-gray-300 text-[11px] font-bold">{plan.eixo}</td>
-                      <td className="px-4 py-2.5">
-                        <div className="flex flex-wrap gap-1">
-                          {plan.apoiadores.slice(0, 2).map(a => (
-                            <span key={a} className="px-1.5 py-0.5 bg-gray-50 dark:bg-gray-800 text-[9px] rounded text-gray-500 font-bold border border-gray-100 dark:border-gray-700">
+                      <td className="px-6 py-4">
+                        <span className="text-[#617589] dark:text-gray-300 text-[11px] font-bold bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">
+                          {plan.eixo}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {plan.apoiadores.slice(0, 3).map(a => (
+                            <span key={a} className="px-2 py-0.5 bg-blue-50/50 dark:bg-blue-900/10 text-[10px] rounded-md text-primary font-bold border border-blue-100/30 dark:border-blue-800/20">
                               {a}
                             </span>
                           ))}
-                          {plan.apoiadores.length > 2 && <span className="text-[9px] text-gray-400">+{plan.apoiadores.length - 2}</span>}
+                          {plan.apoiadores.length > 3 && (
+                            <span className="text-[10px] font-bold text-[#617589] bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded-md border border-gray-100 dark:border-gray-700">
+                              +{plan.apoiadores.length - 3}
+                            </span>
+                          )}
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 text-[#617589] dark:text-gray-400 text-[11px]">
-                        {plan.created_at ? new Date(plan.created_at).toLocaleDateString('pt-BR') : '-'}
+                      <td className="px-6 py-4 text-center">
+                        <span className="text-[#617589] dark:text-gray-400 text-[11px] font-medium">
+                          {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'}
+                        </span>
                       </td>
-                      <td className="px-4 py-2.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold border ${STATUS_COLORS[plan.status]}`}>
+                      <td className="px-6 py-4 text-center">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black border tracking-wider ${STATUS_COLORS[plan.status]}`}>
                           {plan.status}
                         </span>
                       </td>
-                      <td className="px-4 py-2.5 text-right">
+                      <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => setSelectedPlan(plan)}
-                          className="text-[#617589] hover:text-primary dark:text-gray-400 transition-colors"
+                          className="p-2 text-[#617589] hover:text-primary dark:text-gray-400 hover:bg-primary/5 dark:hover:bg-primary/10 rounded-xl transition-all active:scale-90"
+                          title="Visualizar Detalhes"
                         >
-                          <span className="material-symbols-outlined text-[18px]">visibility</span>
+                          <span className="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
                       </td>
                     </tr>
