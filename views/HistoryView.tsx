@@ -98,126 +98,125 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Sticky Header and Filter Bar */}
-      <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
-        <div className="max-w-[1400px] mx-auto w-full px-3 md:px-8 py-3 md:py-4 flex flex-col gap-3 md:gap-4">
+      <div className="sticky top-0 z-30 bg-background-light/95 dark:bg-[#0f1721]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
+        <div className="max-w-[1400px] mx-auto w-full px-3 md:px-8 py-2 md:py-4 flex flex-col gap-2 md:gap-4">
           {/* Title and Add Button */}
-          <div className="flex flex-wrap justify-between items-center gap-3 md:gap-4">
+          <div className="flex items-center justify-between">
             <div className="flex flex-col">
-              <div className="flex items-center gap-2 md:gap-3">
-                <h1 className="text-[#111418] dark:text-white text-lg md:text-2xl font-black tracking-tight">Histórico</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-[#111418] dark:text-white text-base md:text-2xl font-black tracking-tight">Histórico</h1>
                 <div className="flex items-center px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
-                  <span className="text-[10px] md:text-xs font-bold text-primary whitespace-nowrap">
+                  <span className="text-[9px] md:text-xs font-bold text-primary whitespace-nowrap">
                     {filteredPlans.length} {filteredPlans.length === 1 ? 'REGISTRO' : 'REGISTROS'}
                   </span>
                 </div>
               </div>
-              <p className="text-[#617589] dark:text-gray-400 text-[10px] md:text-xs font-medium">Arquivo Geral de Atividades</p>
+              <p className="hidden md:block text-[#617589] dark:text-gray-400 text-xs font-medium">Arquivo Geral de Atividades</p>
             </div>
             <button
               onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex items-center justify-center rounded-xl h-10 px-4 md:px-5 bg-primary hover:bg-blue-600 text-white gap-2 text-xs md:text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
+              className="flex items-center justify-center rounded-xl h-9 md:h-10 px-3 md:px-5 bg-primary hover:bg-blue-600 text-white gap-1.5 text-[10px] md:text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
-              <span className="hidden sm:inline">Novo Plano</span>
-              <span className="sm:hidden">Novo</span>
+              <span>Novo</span>
+              <span className="hidden sm:inline">Plano</span>
             </button>
           </div>
 
-          {/* Search and Main Filters */}
-          <div className="flex flex-col lg:flex-row gap-3 md:gap-4 items-stretch lg:items-center">
-            {/* Search */}
-            <div className="flex-1 min-w-0">
-              <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[18px] md:text-[20px] group-focus-within:text-primary transition-colors">search</span>
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="form-input flex w-full rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white/50 dark:bg-gray-800 pl-9 md:pl-10 h-10 md:h-11 text-xs md:text-sm focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
-                  placeholder="Buscar planos..."
-                />
-              </div>
+          {/* Search and Clear Row */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 relative group">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[16px] md:text-[20px] group-focus-within:text-primary transition-colors">search</span>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="form-input flex w-full rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white/50 dark:bg-gray-800 pl-9 h-9 md:h-11 text-[11px] md:text-sm focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
+                placeholder="Buscar..."
+              />
             </div>
 
-            {/* Clear Filters */}
             <button
               onClick={clearFilters}
-              className="flex h-10 md:h-11 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-xs md:text-sm font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shrink-0"
+              className="flex h-9 md:h-11 items-center justify-center gap-1.5 md:gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-3 md:px-4 text-[11px] md:text-sm font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 transition-all shrink-0"
+              title="Limpar todos os filtros"
             >
-              <span className="material-symbols-outlined text-[18px] md:text-[20px]">filter_alt_off</span>
-              <span className="whitespace-nowrap">Limpar Filtros</span>
+              <span className="material-symbols-outlined text-[16px] md:text-[20px]">filter_alt_off</span>
+              <span className="hidden xs:inline">Limpar</span>
             </button>
           </div>
 
-          {/* Filter Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-stretch">
-            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <FilterDropdown
-                label="Status"
-                value={filterStatus}
-                options={statusOptions}
-                onChange={setFilterStatus}
-                icon="info"
-                className="bg-transparent px-3 py-1.5"
-              />
-            </div>
-            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <FilterDropdown
-                label="Eixo"
-                value={filterEixo}
-                options={eixoOptions}
-                onChange={setFilterEixo}
-                icon="account_tree"
-                className="bg-transparent px-3 py-1.5"
-              />
-            </div>
-            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <FilterDropdown
-                label="Linha"
-                value={filterLinha}
-                options={linhaOptions}
-                onChange={setFilterLinha}
-                icon="health_and_safety"
-                className="bg-transparent px-3 py-1.5"
-              />
-            </div>
-            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <FilterDropdown
-                label="Apoiador"
-                value={filterApoiador}
-                options={apoiadorOptions}
-                onChange={setFilterApoiador}
-                icon="group"
-                className="bg-transparent px-3 py-1.5"
-              />
-            </div>
+          {/* Filter Bar (Horizontal Scroll on Mobile) */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+            <div className="flex flex-nowrap gap-2 min-w-max md:w-full md:grid md:grid-cols-6 md:gap-3">
+              <div className="min-w-[130px] md:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+                <FilterDropdown
+                  label="Status"
+                  value={filterStatus}
+                  options={statusOptions}
+                  onChange={setFilterStatus}
+                  icon="info"
+                  className="bg-transparent px-3 py-1.5"
+                />
+              </div>
+              <div className="min-w-[130px] md:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+                <FilterDropdown
+                  label="Eixo"
+                  value={filterEixo}
+                  options={eixoOptions}
+                  onChange={setFilterEixo}
+                  icon="account_tree"
+                  className="bg-transparent px-3 py-1.5"
+                />
+              </div>
+              <div className="min-w-[130px] md:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+                <FilterDropdown
+                  label="Linha"
+                  value={filterLinha}
+                  options={linhaOptions}
+                  onChange={setFilterLinha}
+                  icon="health_and_safety"
+                  className="bg-transparent px-3 py-1.5"
+                />
+              </div>
+              <div className="min-w-[130px] md:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+                <FilterDropdown
+                  label="Apoiador"
+                  value={filterApoiador}
+                  options={apoiadorOptions}
+                  onChange={setFilterApoiador}
+                  icon="group"
+                  className="bg-transparent px-3 py-1.5"
+                />
+              </div>
 
-            <div className="lg:col-span-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <div
-                className="flex items-center gap-2 px-3 py-1.5 flex-1 group cursor-pointer"
-                onClick={(e) => {
-                  const input = e.currentTarget.querySelector('input');
-                  if (input && 'showPicker' in input) (input as any).showPicker();
-                }}
-              >
-                <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">calendar_today</span>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5 whitespace-nowrap">Data Inicial Entre</span>
-                  <div className="flex items-center gap-1">
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
-                    />
-                    <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40 px-1">e</span>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
-                    />
+              <div className="lg:col-span-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 flex-1 group cursor-pointer"
+                  onClick={(e) => {
+                    const input = e.currentTarget.querySelector('input');
+                    if (input && 'showPicker' in input) (input as any).showPicker();
+                  }}
+                >
+                  <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">calendar_today</span>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5 whitespace-nowrap">Data Inicial Entre</span>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
+                      />
+                      <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40 px-1">e</span>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

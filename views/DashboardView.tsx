@@ -122,63 +122,72 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   return (
     <div className="flex flex-col min-h-full">
       {/* Sticky Header and Filter Bar */}
-      <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-3 md:px-6 lg:px-8 py-2 md:py-3 transition-all duration-200">
-        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 md:gap-4">
-          <div className="flex flex-col gap-0.5">
-            <h1 className="text-[#111418] dark:text-white text-lg md:text-2xl font-black tracking-tight">Painel</h1>
-            <p className="text-[#617589] dark:text-gray-400 text-[9px] md:text-[10px] font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
-          </div>
-
-          <div className="flex-1 flex justify-center px-0 lg:px-4">
-            <div className="w-full max-w-5xl bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex flex-col md:flex-row items-center gap-1 shadow-sm transition-all hover:bg-white dark:hover:bg-[#1A2633] focus-within:ring-2 focus-within:ring-primary/20">
-              <FilterDropdown
-                label="Linha"
-                value={filterLinha}
-                options={linhaOptions}
-                onChange={setFilterLinha}
-                icon="health_and_safety"
-              />
-              <FilterDropdown
-                label="Eixo"
-                value={filterEixo}
-                options={eixoOptions}
-                onChange={setFilterEixo}
-                icon="account_tree"
-              />
-              <FilterDropdown
-                label="Apoiador"
-                value={filterApoiador}
-                options={apoiadorOptions}
-                onChange={setFilterApoiador}
-                icon="group"
-              />
-
-              <div className="hidden xl:flex items-center px-4 py-2 bg-primary/5 dark:bg-primary/20 rounded-lg mr-1 border border-primary/10 transition-colors group-hover:bg-primary/10">
-                <span className="text-[10px] font-black text-primary uppercase whitespace-nowrap">
-                  {filteredPlans.length} {filteredPlans.length === 1 ? 'PLANO' : 'PLANOS'}
-                </span>
-              </div>
+      <div className="sticky top-0 z-30 bg-background-light/95 dark:bg-[#0f1721]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-3 md:px-6 lg:px-8 py-1.5 md:py-3 transition-all duration-200">
+        <div className="max-w-[1400px] mx-auto flex flex-col gap-2 md:gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <h1 className="text-[#111418] dark:text-white text-base md:text-2xl font-black tracking-tight">Painel</h1>
+              <p className="hidden md:block text-[#617589] dark:text-gray-400 text-[10px] font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
             </div>
 
-            <button
-              onClick={clearFilters}
-              disabled={filterLinha === 'Todos' && filterEixo === 'Todos' && filterApoiador === 'Todos'}
-              className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-3 md:px-4 text-xs font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
-              title="Limpar todos os filtros"
-            >
-              <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
-              <span className="hidden md:inline">Limpar</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearFilters}
+                disabled={filterLinha === 'Todos' && filterEixo === 'Todos' && filterApoiador === 'Todos'}
+                className="flex h-9 md:h-10 items-center justify-center gap-1.5 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-2.5 md:px-4 text-[10px] md:text-xs font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                title="Limpar todos os filtros"
+              >
+                <span className="material-symbols-outlined text-[16px] md:text-[18px]">filter_alt_off</span>
+                <span className="hidden xs:inline">Limpar</span>
+              </button>
+
+              <button
+                onClick={() => onNavigate(View.CREATE_PLAN)}
+                className="flex items-center justify-center gap-1.5 bg-primary hover:bg-blue-600 text-white rounded-xl px-3 md:px-5 h-9 md:h-10 text-[10px] md:text-sm font-bold transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap"
+              >
+                <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
+                <span>Novo</span>
+                <span className="hidden sm:inline">Plano</span>
+              </button>
+            </div>
           </div>
 
-          <button
-            onClick={() => onNavigate(View.CREATE_PLAN)}
-            className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-4 md:px-5 h-10 text-xs md:text-sm font-bold transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap"
-          >
-            <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
-            <span className="hidden sm:inline">Novo Plano</span>
-            <span className="sm:hidden">Novo</span>
-          </button>
+          <div className="flex flex-col md:flex-row items-center gap-2">
+            <div className="w-full bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex items-center shadow-sm overflow-x-auto no-scrollbar focus-within:ring-2 focus-within:ring-primary/20">
+              <div className="flex items-center gap-1 min-w-max md:w-full">
+                <FilterDropdown
+                  label="Linha"
+                  value={filterLinha}
+                  options={linhaOptions}
+                  onChange={setFilterLinha}
+                  icon="health_and_safety"
+                  className="min-w-[130px] md:flex-1"
+                />
+                <FilterDropdown
+                  label="Eixo"
+                  value={filterEixo}
+                  options={eixoOptions}
+                  onChange={setFilterEixo}
+                  icon="account_tree"
+                  className="min-w-[130px] md:flex-1"
+                />
+                <FilterDropdown
+                  label="Apoiador"
+                  value={filterApoiador}
+                  options={apoiadorOptions}
+                  onChange={setFilterApoiador}
+                  icon="group"
+                  className="min-w-[140px] md:flex-1"
+                />
+
+                <div className="hidden xl:flex items-center px-4 py-2 bg-primary/5 dark:bg-primary/20 rounded-lg mr-1 border border-primary/10 transition-colors">
+                  <span className="text-[10px] font-black text-primary uppercase whitespace-nowrap">
+                    {filteredPlans.length} {filteredPlans.length === 1 ? 'PLANO' : 'PLANOS'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -576,7 +585,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
         )}
         <p className="text-xs text-[#617589] dark:text-gray-500 text-center pb-8">Desenvolvido por Fabio Ferreira de Oliveira - DAPS/CAP5.3</p>
       </div>
-    </div>
+    </div >
   );
 };
 
