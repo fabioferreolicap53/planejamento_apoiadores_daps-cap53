@@ -219,8 +219,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
       </div>
 
 
-      <div className="flex-1 flex flex-col min-h-0 p-4 sm:px-8 py-4">
-        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col min-h-0 gap-4">
+      <div className="flex-1 flex flex-col min-h-0 py-4">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 flex-1 flex flex-col min-h-0 gap-4">
           <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
             <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
