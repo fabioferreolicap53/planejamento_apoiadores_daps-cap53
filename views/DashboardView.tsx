@@ -13,6 +13,74 @@ interface DashboardViewProps {
   plans: Plan[];
 }
 
+interface FilterDropdownProps {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  icon: string;
+}
+
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, value, options, onChange, icon }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-3 flex-1 w-full border-b md:border-b-0 md:border-r last:md:border-r-0 border-gray-100 dark:border-gray-700 px-3 py-1 group relative" ref={dropdownRef}>
+      <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">
+        {icon}
+      </span>
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5">{label}</span>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center w-full bg-transparent p-0 h-6 text-xs font-bold text-primary focus:outline-none truncate hover:text-blue-600 transition-colors text-left"
+        >
+          <span className="truncate flex-1">{value}</span>
+          <span className={`material-symbols-outlined transition-transform duration-200 text-primary/40 !text-[18px] ${isOpen ? 'rotate-180' : ''}`}>
+            expand_more
+          </span>
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-[calc(100%+0.5rem)] left-0 w-full min-w-[220px] bg-white dark:bg-[#1A2633] rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 origin-top">
+          <div className="max-h-[300px] overflow-y-auto py-1 custom-scrollbar">
+            {options.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => {
+                  onChange(opt);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2.5 text-[11px] font-bold transition-all flex items-center justify-between group/item
+                  ${value === opt
+                    ? 'bg-primary/5 text-primary'
+                    : 'text-[#617589] dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-primary dark:hover:text-white'}`}
+              >
+                <span className="truncate flex-1">{opt}</span>
+                {value === opt && (
+                  <span className="material-symbols-outlined !text-[16px]">check</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
   const [filterLinha, setFilterLinha] = React.useState<string>('Todos');
@@ -121,65 +189,27 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
 
           <div className="flex-1 flex justify-center px-0 lg:px-4">
             <div className="w-full max-w-5xl bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex flex-col md:flex-row items-center gap-1 shadow-sm transition-all hover:bg-white dark:hover:bg-[#1A2633] focus-within:ring-2 focus-within:ring-primary/20">
-              {/* Linha Filter */}
-              <div className="flex items-center gap-3 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 px-3 py-1 group">
-                <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0">health_and_safety</span>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5">Linha</span>
-                  <div className="relative flex items-center">
-                    <select
-                      value={filterLinha}
-                      onChange={(e) => setFilterLinha(e.target.value)}
-                      className="form-select w-full border-none bg-transparent p-0 pr-6 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer appearance-none truncate"
-                    >
-                      {linhaOptions.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                    <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-primary/40 !text-[18px]">expand_more</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Eixo Filter */}
-              <div className="flex items-center gap-3 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 px-3 py-1 group">
-                <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0">account_tree</span>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5">Eixo</span>
-                  <div className="relative flex items-center">
-                    <select
-                      value={filterEixo}
-                      onChange={(e) => setFilterEixo(e.target.value)}
-                      className="form-select w-full border-none bg-transparent p-0 pr-6 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer appearance-none truncate"
-                    >
-                      {eixoOptions.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                    <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-primary/40 !text-[18px]">expand_more</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Apoiador Filter */}
-              <div className="flex items-center gap-3 flex-1 w-full border-b md:border-b-0 md:border-r border-gray-100 dark:border-gray-700 px-3 py-1 group">
-                <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0">group</span>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5">Apoiador</span>
-                  <div className="relative flex items-center">
-                    <select
-                      value={filterApoiador}
-                      onChange={(e) => setFilterApoiador(e.target.value)}
-                      className="form-select w-full border-none bg-transparent p-0 pr-6 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer appearance-none truncate"
-                    >
-                      {apoiadorOptions.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                    <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-primary/40 !text-[18px]">expand_more</span>
-                  </div>
-                </div>
-              </div>
+              <FilterDropdown
+                label="Linha"
+                value={filterLinha}
+                options={linhaOptions}
+                onChange={setFilterLinha}
+                icon="health_and_safety"
+              />
+              <FilterDropdown
+                label="Eixo"
+                value={filterEixo}
+                options={eixoOptions}
+                onChange={setFilterEixo}
+                icon="account_tree"
+              />
+              <FilterDropdown
+                label="Apoiador"
+                value={filterApoiador}
+                options={apoiadorOptions}
+                onChange={setFilterApoiador}
+                icon="group"
+              />
 
               <div className="hidden xl:flex items-center px-4 py-2 bg-primary/5 dark:bg-primary/20 rounded-lg mr-1 border border-primary/10 transition-colors group-hover:bg-primary/10">
                 <span className="text-[10px] font-black text-primary uppercase whitespace-nowrap">
