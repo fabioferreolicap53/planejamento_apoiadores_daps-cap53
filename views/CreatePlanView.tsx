@@ -526,7 +526,13 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => setSupporterToManage(e.target.value)}
+                        onChange={(e) => {
+                          if (isAdmin) {
+                            setSupporterToManage(e.target.value);
+                          } else {
+                            handleSupporterSelect(e.target.value);
+                          }
+                        }}
                         value={supporterToManage}
                       >
                         <option value="" disabled>Selecione um apoiador...</option>
@@ -702,7 +708,13 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => setCategoryToManage(e.target.value)}
+                        onChange={(e) => {
+                          if (isAdmin) {
+                            setCategoryToManage(e.target.value);
+                          } else {
+                            handleCategorySelect(e.target.value);
+                          }
+                        }}
                         value={categoryToManage}
                       >
                         <option value="" disabled>Selecione uma categoria...</option>
