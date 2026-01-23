@@ -25,6 +25,10 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const canManage = (plan: Plan) => {
     return profile?.role === 'Administrador' || profile?.id === plan.professional_id;
   };
@@ -58,6 +62,18 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     return matchesSearch && matchesStatus && matchesEixo && matchesLinha && matchesApoiador && matchesDate;
   });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPlans.length / rowsPerPage);
+  const paginatedPlans = filteredPlans.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filterStatus, filterEixo, filterLinha, filterApoiador, startDate, endDate]);
+
   const handleDelete = async (id: string) => {
     if (confirm('Tem certeza que deseja excluir este plano?')) {
       const { error } = await supabase.from('plans').delete().eq('id', id);
@@ -75,6 +91,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     setFilterApoiador('Todos');
     setStartDate('');
     setEndDate('');
+    setCurrentPage(1);
   };
 
   return (
@@ -196,21 +213,21 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </div>
             </div>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 w-full overflow-hidden">
               <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Início entre</label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 w-full">
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="form-input flex-1 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-xs font-medium"
+                  className="form-input flex-1 min-w-0 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-[10px] sm:text-xs font-medium px-2"
                 />
-                <span className="text-[#617589] text-xs font-bold">e</span>
+                <span className="text-[#617589] text-[10px] font-bold shrink-0">e</span>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="form-input flex-1 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-xs font-medium"
+                  className="form-input flex-1 min-w-0 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-[10px] sm:text-xs font-medium px-2"
                 />
               </div>
             </div>
@@ -245,7 +262,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
 
 
                 <tbody className="divide-y divide-[#e5e7eb] dark:divide-gray-800">
-                  {filteredPlans.map((plan) => (
+                  {paginatedPlans.map((plan) => (
                     <tr key={plan.id} className="group hover:bg-[#f0f9ff] dark:hover:bg-blue-900/10 transition-colors">
                       <td className="py-4 px-6 whitespace-nowrap sticky left-0 bg-white dark:bg-[#1a2634] group-hover:bg-[#f0f9ff] dark:group-hover:bg-blue-900/10 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
                         <span className={`inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold border uppercase ${STATUS_COLORS[plan.status]}`}>
@@ -357,24 +374,62 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             <div className="px-6 py-4 flex items-center justify-between border-t border-[#e5e7eb] dark:border-gray-800">
               <div className="flex items-center gap-2">
                 <p className="text-sm text-[#617589]">Linhas por página:</p>
-                <select className="bg-[#f0f2f4] dark:bg-gray-800 border-none rounded text-sm font-medium py-1 px-2 pr-8 focus:ring-0">
-                  <option>10</option>
-                  <option>25</option>
-                  <option>50</option>
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="bg-[#f0f2f4] dark:bg-gray-800 border-none rounded text-sm font-medium py-1 px-2 pr-8 focus:ring-0 cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <p className="text-sm text-[#617589] mr-4">1-10 de 124</p>
+                <p className="text-sm text-[#617589] mr-4">
+                  {filteredPlans.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}-
+                  {Math.min(currentPage * rowsPerPage, filteredPlans.length)} de {filteredPlans.length}
+                </p>
                 <div className="flex gap-1">
-                  <button disabled className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-[#617589] opacity-50">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    className={`w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-[#617589] ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : ''}`}
+                  >
                     <span className="material-symbols-outlined">chevron_left</span>
                   </button>
-                  {[1, 2, 3].map(page => (
-                    <button key={page} className={`w-8 h-8 rounded text-sm font-medium ${page === 1 ? 'bg-primary text-white' : 'hover:bg-gray-100 text-[#617589]'}`}>
-                      {page}
-                    </button>
-                  ))}
-                  <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-[#617589]">
+
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    // Show a window of pages around current page
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`w-8 h-8 rounded text-sm font-medium transition-colors ${currentPage === pageNum ? 'bg-primary text-white' : 'hover:bg-gray-100 text-[#617589]'}`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    className={`w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100 text-[#617589] ${currentPage === totalPages || totalPages === 0 ? 'opacity-30 cursor-not-allowed' : ''}`}
+                  >
                     <span className="material-symbols-outlined">chevron_right</span>
                   </button>
                 </div>
