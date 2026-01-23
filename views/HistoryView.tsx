@@ -53,12 +53,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     const matchesLinha = filterLinha === 'Todos' || p.linha_cuidado === filterLinha;
     const matchesApoiador = filterApoiador === 'Todos' || p.apoiadores.includes(filterApoiador);
 
-    const planDate = p.data_inicial ? new Date(p.data_inicial).getTime() : null;
-    const start = startDate ? new Date(startDate).getTime() : null;
-    const end = endDate ? new Date(endDate).getTime() : null;
+    const planDateStr = p.data_inicial ? p.data_inicial.substring(0, 10) : null;
+    const startStr = startDate || null;
+    const endStr = endDate || null;
 
-    const matchesDate = (!start || (planDate && planDate >= start)) &&
-      (!end || (planDate && planDate <= end));
+    const matchesDate = (!startStr || (planDateStr && planDateStr >= startStr)) &&
+      (!endStr || (planDateStr && planDateStr <= endStr));
 
     return matchesSearch && matchesStatus && matchesEixo && matchesLinha && matchesApoiador && matchesDate;
   });
@@ -192,22 +192,22 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             </div>
 
             <div className="lg:col-span-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <div className="flex items-center gap-2 px-3 py-1.5 flex-1 group">
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 flex-1 group cursor-pointer"
+                onClick={(e) => {
+                  const input = e.currentTarget.querySelector('input');
+                  if (input && 'showPicker' in input) (input as any).showPicker();
+                }}
+              >
                 <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">calendar_today</span>
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5 whitespace-nowrap">Data Inicial Entre</span>
                   <div className="flex items-center gap-1">
-                    <style>{`
-                      input[type="date"]::-webkit-inner-spin-button,
-                      input[type="date"]::-webkit-calendar-picker-indicator {
-                        display: none;
-                        -webkit-appearance: none;
-                      }
-                    `}</style>
                     <input
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
                       className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
                     />
                     <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40 px-1">e</span>
@@ -215,6 +215,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
                       className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
                     />
                   </div>
