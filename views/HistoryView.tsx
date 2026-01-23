@@ -226,9 +226,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-[#f8f9fa] dark:bg-gray-950">
-        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-8 py-6">
-          <div className="bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden transition-all">
+      <div className="flex-1 min-h-0 bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto w-full h-full px-4 sm:px-8 py-6 flex flex-col min-h-0">
+          <div className="flex-1 min-h-0 bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden transition-all flex flex-col">
             <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-20">
@@ -361,7 +361,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </table>
             </div>
 
-            <div className="px-6 py-4 flex items-center justify-between border-t border-[#e5e7eb] dark:border-gray-800">
+            <div className="sticky bottom-0 z-20 border-t border-[#e5e7eb] dark:border-gray-800 px-6 py-4 bg-[#f9fafb] dark:bg-[#1f2937] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
               <div className="flex items-center gap-2">
                 <p className="text-sm text-[#617589]">Linhas por página:</p>
                 <select
