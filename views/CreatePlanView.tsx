@@ -215,6 +215,15 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
       } else {
         if (type === 'eixo' && eixo === label) setEixo('');
         if (type === 'linha_cuidado' && linhaCuidado === label) setLinhaCuidado('');
+
+        // Remove from local selection state if deleted
+        if (type === 'apoiador' && selectedApoiadores.includes(label)) {
+          setSelectedApoiadores(selectedApoiadores.filter(a => a !== label));
+        }
+        if (type === 'categoria' && selectedCategories.includes(label)) {
+          setSelectedCategories(selectedCategories.filter(c => c !== label));
+        }
+
         fetchOptions();
       }
     }
@@ -490,11 +499,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleAddOption('apoiador')}
+                        onClick={() => handleHeaderAction('apoiador')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
-                        Adicionar Novo
+                        <span className="material-symbols-outlined text-[16px]">{supporterToManage ? 'add_circle' : 'add_circle_outline'}</span>
+                        {supporterToManage ? 'Adicionar Selecionado' : 'Adicionar'}
                       </button>
                     )}
                   </div>
@@ -517,7 +526,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => handleSupporterSelect(e.target.value)}
+                        onChange={(e) => setSupporterToManage(e.target.value)}
                         value={supporterToManage}
                       >
                         <option value="" disabled>Selecione um apoiador...</option>
@@ -668,11 +677,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                     {isAdmin && (
                       <button
                         type="button"
-                        onClick={() => handleAddOption('categoria')}
+                        onClick={() => handleHeaderAction('categoria')}
                         className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
                       >
-                        <span className="material-symbols-outlined text-[16px]">add_circle</span>
-                        Adicionar Novo
+                        <span className="material-symbols-outlined text-[16px]">{categoryToManage ? 'add_circle' : 'add_circle_outline'}</span>
+                        {categoryToManage ? 'Adicionar Selecionado' : 'Adicionar'}
                       </button>
                     )}
                   </div>
@@ -693,7 +702,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                       <select
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
                         disabled={!canManage}
-                        onChange={(e) => handleCategorySelect(e.target.value)}
+                        onChange={(e) => setCategoryToManage(e.target.value)}
                         value={categoryToManage}
                       >
                         <option value="" disabled>Selecione uma categoria...</option>
