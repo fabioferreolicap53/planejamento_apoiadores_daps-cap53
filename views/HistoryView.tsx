@@ -145,9 +145,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             </button>
           </div>
 
-          {/* Filter Bar (Horizontal Scroll on Mobile) */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
-            <div className="flex flex-nowrap gap-2 min-w-max md:w-full md:grid md:grid-cols-6 md:gap-3">
+          {/* Filter Bar */}
+          <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-stretch gap-2 w-full md:grid md:grid-cols-6 md:gap-3">
               <div className="min-w-[130px] md:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
                 <FilterDropdown
                   label="Status"

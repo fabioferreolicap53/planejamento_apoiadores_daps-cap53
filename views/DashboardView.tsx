@@ -153,15 +153,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-2">
-            <div className="w-full bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex items-center shadow-sm overflow-x-auto no-scrollbar focus-within:ring-2 focus-within:ring-primary/20">
-              <div className="flex items-center gap-1 min-w-max md:w-full">
+            <div className="w-full bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex items-center shadow-sm focus-within:ring-2 focus-within:ring-primary/20">
+              <div className="flex flex-wrap md:flex-nowrap items-center gap-1 w-full">
                 <FilterDropdown
                   label="Linha"
                   value={filterLinha}
                   options={linhaOptions}
                   onChange={setFilterLinha}
                   icon="health_and_safety"
-                  className="min-w-[130px] md:flex-1"
+                  className="min-w-[120px] flex-1"
                 />
                 <FilterDropdown
                   label="Eixo"
@@ -169,7 +169,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                   options={eixoOptions}
                   onChange={setFilterEixo}
                   icon="account_tree"
-                  className="min-w-[130px] md:flex-1"
+                  className="min-w-[120px] flex-1"
                 />
                 <FilterDropdown
                   label="Apoiador"
@@ -177,7 +177,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                   options={apoiadorOptions}
                   onChange={setFilterApoiador}
                   icon="group"
-                  className="min-w-[140px] md:flex-1"
+                  className="min-w-[140px] flex-1"
                 />
 
                 <div className="hidden xl:flex items-center px-4 py-2 bg-primary/5 dark:bg-primary/20 rounded-lg mr-1 border border-primary/10 transition-colors">
