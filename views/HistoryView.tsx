@@ -4,6 +4,7 @@ import { View, Plan, Profile } from '../types';
 import { STATUS_COLORS } from '../constants';
 import { supabase } from '../lib/supabase';
 import PlanDetailsModal from '../components/PlanDetailsModal';
+import { FilterDropdown } from '../components/FilterDropdown';
 
 interface HistoryViewProps {
   onNavigate: (view: View) => void;
@@ -95,10 +96,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0 z-10">
-        <div className="px-4 sm:px-8 py-3 sm:py-4 max-w-7xl mx-auto w-full">
-          <div className="flex flex-wrap justify-between items-end gap-3 sm:gap-4">
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Sticky Header and Filter Bar */}
+      <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
+        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-8 py-4 flex flex-col gap-4">
+          {/* Title and Add Button */}
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <div className="flex flex-col">
               <div className="flex items-center gap-3">
                 <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl font-black tracking-tighter">Histórico de Planos</h1>
@@ -108,126 +111,101 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                   </span>
                 </div>
               </div>
-              <p className="text-[#617589] dark:text-gray-400 text-xs sm:text-sm">Revise e gerencie seu arquivo de planos registrados.</p>
+              <p className="text-[#617589] dark:text-gray-400 text-xs font-medium">Arquivo Geral de Atividades Planejadas</p>
             </div>
             <button
               onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex w-full sm:w-auto items-center justify-center rounded-lg h-9 px-4 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-sm transition-colors"
+              className="flex items-center justify-center rounded-xl h-10 px-5 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              <span>Criar Novo Plano</span>
+              <span className="material-symbols-outlined text-[20px]">add</span>
+              <span className="hidden sm:inline">Novo Plano</span>
+              <span className="sm:hidden">Novo</span>
             </button>
           </div>
-        </div>
-      </header>
 
-
-      <div className="bg-white dark:bg-[#1a2634] border-b border-[#e5e7eb] dark:border-gray-800 flex-shrink-0">
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-3 sm:pt-1 sm:pb-4 flex flex-col gap-3">
-          <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between w-full">
-            <div className="w-full lg:w-96">
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[18px]">search</span>
+          {/* Search and Main Filters */}
+          <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+            {/* Search */}
+            <div className="flex-1 min-w-0">
+              <div className="relative group">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px] group-focus-within:text-primary transition-colors">search</span>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="form-input flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 pl-10 h-9 text-sm"
+                  className="form-input flex w-full rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white/50 dark:bg-gray-800 pl-10 h-11 text-sm focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
                   placeholder="Buscar por linha, eixo, resumo ou ID..."
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={clearFilters}
-                className="flex h-9 items-center justify-center gap-2 rounded-lg bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 px-4 text-sm font-bold border border-red-100 dark:border-red-900/30 hover:bg-red-100 transition-colors"
-              >
-                <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
-                <span>Limpar Filtros</span>
-              </button>
-            </div>
+            {/* Clear Filters */}
+            <button
+              onClick={clearFilters}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-sm font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all"
+            >
+              <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
+              <span className="whitespace-nowrap">Limpar Filtros</span>
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Status</label>
-              <div className="relative">
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
-                >
-                  {statusOptions.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-              </div>
+          {/* Filter Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+              <FilterDropdown
+                label="Status"
+                value={filterStatus}
+                options={statusOptions}
+                onChange={setFilterStatus}
+                icon="info"
+                className="bg-transparent"
+              />
             </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Eixo</label>
-              <div className="relative">
-                <select
-                  value={filterEixo}
-                  onChange={(e) => setFilterEixo(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
-                >
-                  {eixoOptions.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-              </div>
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+              <FilterDropdown
+                label="Eixo"
+                value={filterEixo}
+                options={eixoOptions}
+                onChange={setFilterEixo}
+                icon="account_tree"
+                className="bg-transparent"
+              />
             </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Linha de Cuidado</label>
-              <div className="relative">
-                <select
-                  value={filterLinha}
-                  onChange={(e) => setFilterLinha(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
-                >
-                  {linhaOptions.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-              </div>
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+              <FilterDropdown
+                label="Linha"
+                value={filterLinha}
+                options={linhaOptions}
+                onChange={setFilterLinha}
+                icon="health_and_safety"
+                className="bg-transparent"
+              />
             </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Apoiador</label>
-              <div className="relative">
-                <select
-                  value={filterApoiador}
-                  onChange={(e) => setFilterApoiador(e.target.value)}
-                  className="form-select flex w-full rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-sm pl-4 pr-10 appearance-none font-medium"
-                >
-                  {apoiadorOptions.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#617589]">expand_more</span>
-              </div>
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+              <FilterDropdown
+                label="Apoiador"
+                value={filterApoiador}
+                options={apoiadorOptions}
+                onChange={setFilterApoiador}
+                icon="group"
+                className="bg-transparent"
+              />
             </div>
 
             <div className="flex flex-col gap-1 w-full overflow-hidden">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-1">Início entre</label>
-              <div className="flex items-center gap-1.5 w-full">
+              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-3">Data inicial entre</label>
+              <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1">
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="form-input flex-1 min-w-0 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-[10px] sm:text-xs font-medium px-2"
+                  className="form-input flex-1 min-w-0 border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 px-2"
                 />
                 <span className="text-[#617589] text-[10px] font-bold shrink-0">e</span>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="form-input flex-1 min-w-0 rounded-lg border-[#e5e7eb] dark:border-gray-700 bg-[#f0f2f4] dark:bg-gray-800 h-9 text-[10px] sm:text-xs font-medium px-2"
+                  className="form-input flex-1 min-w-0 border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 px-2"
                 />
               </div>
             </div>
@@ -235,10 +213,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         </div>
       </div>
 
-
-      <div className="flex-1 flex flex-col min-h-0 py-4">
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 flex-1 flex flex-col min-h-0 gap-4">
-          <div className="bg-white dark:bg-[#1a2634] rounded-xl border border-[#e5e7eb] dark:border-gray-800 shadow-sm flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div className="flex-1 overflow-auto bg-[#f8f9fa] dark:bg-gray-950">
+        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-8 py-6">
+          <div className="bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden transition-all">
             <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-20">

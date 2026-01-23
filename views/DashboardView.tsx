@@ -7,79 +7,12 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
 } from 'recharts';
 import PlanDetailsModal from '../components/PlanDetailsModal';
+import { FilterDropdown } from '../components/FilterDropdown';
 
 interface DashboardViewProps {
   onNavigate: (view: View) => void;
   plans: Plan[];
 }
-
-interface FilterDropdownProps {
-  label: string;
-  value: string;
-  options: string[];
-  onChange: (value: string) => void;
-  icon: string;
-}
-
-const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, value, options, onChange, icon }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  return (
-    <div className="flex items-center gap-3 flex-1 w-full border-b md:border-b-0 md:border-r last:md:border-r-0 border-gray-100 dark:border-gray-700 px-3 py-1 group relative" ref={dropdownRef}>
-      <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">
-        {icon}
-      </span>
-      <div className="flex flex-col min-w-0 flex-1">
-        <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5">{label}</span>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center w-full bg-transparent p-0 h-6 text-xs font-bold text-primary focus:outline-none truncate hover:text-blue-600 transition-colors text-left"
-        >
-          <span className="truncate flex-1">{value}</span>
-          <span className={`material-symbols-outlined transition-transform duration-200 text-primary/40 !text-[18px] ${isOpen ? 'rotate-180' : ''}`}>
-            expand_more
-          </span>
-        </button>
-      </div>
-
-      {isOpen && (
-        <div className="absolute top-[calc(100%+0.5rem)] left-0 w-full min-w-[220px] bg-white dark:bg-[#1A2633] rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 origin-top">
-          <div className="max-h-[300px] overflow-y-auto py-1 custom-scrollbar">
-            {options.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => {
-                  onChange(opt);
-                  setIsOpen(false);
-                }}
-                className={`w-full text-left px-4 py-2.5 text-[11px] font-bold transition-all flex items-center justify-between group/item
-                  ${value === opt
-                    ? 'bg-primary/5 text-primary'
-                    : 'text-[#617589] dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-primary dark:hover:text-white'}`}
-              >
-                <span className="truncate flex-1">{opt}</span>
-                {value === opt && (
-                  <span className="material-symbols-outlined !text-[16px]">check</span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   const [selectedPlan, setSelectedPlan] = React.useState<Plan | null>(null);
@@ -431,6 +364,67 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     fill="#10b981"
                     radius={[0, 4, 4, 0]}
                     barSize={24}
+                    label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[#111418] dark:text-white text-base font-bold">Resolutividade por Linha</h3>
+              <span className="material-symbols-outlined text-gray-400 text-lg">verified</span>
+            </div>
+            <div className="flex-1 flex flex-col gap-4 overflow-y-auto max-h-[250px] pr-2 custom-scrollbar">
+              {linhaCuidadoData.map((item) => {
+                const linhaPlans = filteredPlans.filter(p => p.linha_cuidado === item.name);
+                const linhaConcluded = linhaPlans.filter(p => p.status === 'CONCLUÍDO').length;
+                const percentage = linhaPlans.length > 0 ? Math.round((linhaConcluded / linhaPlans.length) * 100) : 0;
+                return (
+                  <div key={item.name} className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-end">
+                      <span className="text-[11px] font-bold text-[#111418] dark:text-white truncate max-w-[150px]">{item.name}</span>
+                      <span className="text-[10px] font-black text-primary">{percentage}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-primary h-1.5 rounded-full transition-all duration-500" style={{ width: `${percentage}%` }}></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linha de Cuidado</h3>
+              <span className="material-symbols-outlined text-gray-400 text-lg">bar_chart</span>
+            </div>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 20, right: 30 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
+                  <XAxis type="number" hide />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                    width={140}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(19, 127, 236, 0.05)' }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Bar
+                    dataKey="value"
+                    fill="#137fec"
+                    radius={[0, 4, 4, 0]}
+                    barSize={20}
                     label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
                   />
                 </BarChart>
