@@ -242,12 +242,21 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                      contentStyle={{
+                        fontFamily: "'Inter', sans-serif",
+                        borderRadius: '12px',
+                        border: 'none',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-3xl font-black text-[#111418] dark:text-white">{filteredPlans.length}</span>
-                  <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Planos Filtrados</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none font-display">
+                  <span className="text-3xl font-black text-[#111418] dark:text-white" style={{ fontFamily: "'Inter', sans-serif" }}>{filteredPlans.length}</span>
+                  <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>Planos Filtrados</span>
                 </div>
               </div>
               <div className="flex flex-col gap-3 w-full sm:w-auto">
@@ -279,17 +288,24 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#617589', fontSize: 12 }}
+                  tick={{ fill: '#617589', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
                   dy={10}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#617589', fontSize: 12 }}
+                  tick={{ fill: '#617589', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
                 />
                 <Tooltip
                   cursor={{ fill: '#f3f4f6' }}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  contentStyle={{
+                    fontFamily: "'Inter', sans-serif",
+                    borderRadius: '12px',
+                    border: 'none',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}
                 />
                 <Bar
                   dataKey="planos"
@@ -318,19 +334,26 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#617589', fontSize: 12 }}
+                    tick={{ fill: '#617589', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
                     width={100}
                   />
                   <Tooltip
                     cursor={{ fill: '#f3f4f6' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    contentStyle={{
+                      fontFamily: "'Inter', sans-serif",
+                      borderRadius: '12px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
                   />
                   <Bar
                     dataKey="value"
                     fill="#8b5cf6"
                     radius={[0, 4, 4, 0]}
                     barSize={30}
-                    label={{ position: 'right', fill: '#617589', fontSize: 12 }}
+                    label={{ position: 'right', fill: '#617589', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 600 }}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -352,19 +375,27 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                    tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                     width={120}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', background: '#fff' }}
+                    contentStyle={{
+                      fontFamily: "'Inter', sans-serif",
+                      borderRadius: '12px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                      background: '#fff',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
                   />
                   <Bar
                     dataKey="value"
                     fill="#10b981"
                     radius={[0, 4, 4, 0]}
                     barSize={24}
-                    label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                    label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -413,19 +444,26 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                    tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                     width={140}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(19, 127, 236, 0.05)' }}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    contentStyle={{
+                      fontFamily: "'Inter', sans-serif",
+                      borderRadius: '12px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
                   />
                   <Bar
                     dataKey="value"
                     fill="#137fec"
                     radius={[0, 4, 4, 0]}
                     barSize={20}
-                    label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: 'bold' }}
+                    label={{ position: 'right', fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
                   />
                 </BarChart>
               </ResponsiveContainer>
