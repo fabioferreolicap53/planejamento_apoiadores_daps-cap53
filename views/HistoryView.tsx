@@ -149,8 +149,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
           </div>
 
           {/* Filter Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-stretch">
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-stretch">
+            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
               <FilterDropdown
                 label="Status"
                 value={filterStatus}
@@ -160,7 +160,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                 className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
               <FilterDropdown
                 label="Eixo"
                 value={filterEixo}
@@ -170,7 +170,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                 className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
               <FilterDropdown
                 label="Linha"
                 value={filterLinha}
@@ -180,7 +180,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                 className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+            <div className="lg:col-span-1 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
               <FilterDropdown
                 label="Apoiador"
                 value={filterApoiador}
@@ -191,19 +191,26 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               />
             </div>
 
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
-              <div className="flex items-center gap-3 px-3 py-1.5 flex-1 group">
+            <div className="lg:col-span-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 flex">
+              <div className="flex items-center gap-2 px-3 py-1.5 flex-1 group">
                 <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">calendar_today</span>
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5 whitespace-nowrap">Data Inicial Entre</span>
                   <div className="flex items-center gap-1">
+                    <style>{`
+                      input[type="date"]::-webkit-inner-spin-button,
+                      input[type="date"]::-webkit-calendar-picker-indicator {
+                        display: none;
+                        -webkit-appearance: none;
+                      }
+                    `}</style>
                     <input
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                       className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
                     />
-                    <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40">e</span>
+                    <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40 px-1">e</span>
                     <input
                       type="date"
                       value={endDate}
