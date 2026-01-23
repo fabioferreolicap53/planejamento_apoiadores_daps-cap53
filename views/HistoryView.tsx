@@ -150,63 +150,66 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
 
           {/* Filter Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800">
               <FilterDropdown
                 label="Status"
                 value={filterStatus}
                 options={statusOptions}
                 onChange={setFilterStatus}
                 icon="info"
-                className="bg-transparent"
+                className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800">
               <FilterDropdown
                 label="Eixo"
                 value={filterEixo}
                 options={eixoOptions}
                 onChange={setFilterEixo}
                 icon="account_tree"
-                className="bg-transparent"
+                className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800">
               <FilterDropdown
                 label="Linha"
                 value={filterLinha}
                 options={linhaOptions}
                 onChange={setFilterLinha}
                 icon="health_and_safety"
-                className="bg-transparent"
+                className="bg-transparent px-3 py-1.5"
               />
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-0.5">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800">
               <FilterDropdown
                 label="Apoiador"
                 value={filterApoiador}
                 options={apoiadorOptions}
                 onChange={setFilterApoiador}
                 icon="group"
-                className="bg-transparent"
+                className="bg-transparent px-3 py-1.5"
               />
             </div>
 
-            <div className="flex flex-col gap-1 w-full overflow-hidden">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-[#617589] dark:text-gray-400 px-3">Data inicial entre</label>
-              <div className="flex items-center gap-2 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1">
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="form-input flex-1 min-w-0 border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 px-2"
-                />
-                <span className="text-[#617589] text-[10px] font-bold shrink-0">e</span>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="form-input flex-1 min-w-0 border-none bg-transparent h-8 text-[11px] font-bold text-primary focus:ring-0 px-2"
-                />
+            <div className="flex items-center gap-3 bg-white/50 dark:bg-gray-800/50 rounded-xl border border-[#dbe0e6] dark:border-gray-700 px-3 py-1.5 shadow-sm transition-all hover:bg-white dark:hover:bg-gray-800 group h-[46px]">
+              <span className="material-symbols-outlined text-primary/70 !text-[20px] group-hover:text-primary shrink-0 transition-colors">calendar_today</span>
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="text-[9px] font-bold text-[#617589] dark:text-gray-400 uppercase leading-none mb-0.5 whitespace-nowrap">Data Inicial Entre</span>
+                <div className="flex items-center gap-1">
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
+                  />
+                  <span className="text-[#617589] text-[10px] font-bold shrink-0 opacity-40">e</span>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="form-input flex-1 min-w-0 border-none bg-transparent p-0 h-6 text-xs font-bold text-primary focus:ring-0 cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </div>
