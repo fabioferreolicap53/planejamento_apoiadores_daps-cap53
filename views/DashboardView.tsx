@@ -324,9 +324,9 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Planos por Apoiador</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">groups</span>
             </div>
-            <div className="h-[220px] w-full">
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 20, right: 20 }}>
+                <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 10, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
                   <XAxis type="number" hide />
                   <YAxis
@@ -334,8 +334,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     type="category"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#617589', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
-                    width={100}
+                    tick={{ fill: '#617589', fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
+                    width={160}
                   />
                   <Tooltip
                     cursor={{ fill: '#f3f4f6' }}
@@ -365,9 +365,9 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Distribuição por Categorias</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">category</span>
             </div>
-            <div className="h-[220px] w-full">
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 20, right: 30 }}>
+                <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
                   <XAxis type="number" hide />
                   <YAxis
@@ -376,7 +376,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
-                    width={120}
+                    width={180}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
@@ -434,9 +434,9 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linha de Cuidado</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">bar_chart</span>
             </div>
-            <div className="h-[250px] w-full">
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 20, right: 30 }}>
+                <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
                   <XAxis type="number" hide />
                   <YAxis
@@ -445,7 +445,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     axisLine={false}
                     tickLine={false}
                     tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
-                    width={140}
+                    width={200}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(19, 127, 236, 0.05)' }}
