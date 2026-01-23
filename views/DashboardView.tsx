@@ -122,11 +122,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   return (
     <div className="flex flex-col min-h-full">
       {/* Sticky Header and Filter Bar */}
-      <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-4 md:px-6 lg:px-8 py-3 transition-all duration-200">
-        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-3 md:px-6 lg:px-8 py-2 md:py-3 transition-all duration-200">
+        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 md:gap-4">
           <div className="flex flex-col gap-0.5">
-            <h1 className="text-[#111418] dark:text-white text-xl md:text-2xl font-black tracking-tight">Painel</h1>
-            <p className="text-[#617589] dark:text-gray-400 text-[10px] font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
+            <h1 className="text-[#111418] dark:text-white text-lg md:text-2xl font-black tracking-tight">Painel</h1>
+            <p className="text-[#617589] dark:text-gray-400 text-[9px] md:text-[10px] font-medium uppercase tracking-[0.1em]">Gestão Estratégica</p>
           </div>
 
           <div className="flex-1 flex justify-center px-0 lg:px-4">
@@ -163,38 +163,38 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
             <button
               onClick={clearFilters}
               disabled={filterLinha === 'Todos' && filterEixo === 'Todos' && filterApoiador === 'Todos'}
-              className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-xs font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+              className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-3 md:px-4 text-xs font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
               title="Limpar todos os filtros"
             >
               <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
-              <span className="hidden xl:inline">Limpar</span>
+              <span className="hidden md:inline">Limpar</span>
             </button>
           </div>
 
           <button
             onClick={() => onNavigate(View.CREATE_PLAN)}
-            className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-5 h-10 text-sm font-bold transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap"
+            className="flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white rounded-xl px-4 md:px-5 h-10 text-xs md:text-sm font-bold transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap"
           >
-            <span className="material-symbols-outlined text-[20px]">add</span>
+            <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
             <span className="hidden sm:inline">Novo Plano</span>
             <span className="sm:hidden">Novo</span>
           </button>
         </div>
       </div>
 
-      <div className="p-4 md:p-6 lg:p-8 max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
+      <div className="p-3 md:p-6 lg:p-8 max-w-[1400px] mx-auto flex flex-col gap-4 md:gap-6 w-full">
 
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm relative overflow-hidden group">
-              <div className={`absolute right-[-8px] top-[-8px] bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-full p-6 transition-transform group-hover:scale-110`}>
-                <span className={`material-symbols-outlined text-${stat.color}-500 text-3xl opacity-20`}>{stat.icon}</span>
+            <div key={stat.label} className="p-3 md:p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm relative overflow-hidden group">
+              <div className={`absolute right-[-8px] top-[-8px] bg-${stat.color}-50 dark:bg-${stat.color}-900/20 rounded-full p-5 md:p-6 transition-transform group-hover:scale-110`}>
+                <span className={`material-symbols-outlined text-${stat.color}-500 text-2xl md:text-3xl opacity-20`}>{stat.icon}</span>
               </div>
               <div className="flex flex-col gap-0.5 relative z-10">
-                <p className="text-[#617589] dark:text-gray-400 text-[10px] font-semibold uppercase tracking-wider">{stat.label}</p>
+                <p className="text-[#617589] dark:text-gray-400 text-[9px] md:text-[10px] font-semibold uppercase tracking-wider">{stat.label}</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-[#111418] dark:text-white text-2xl font-bold">{stat.value}</span>
+                  <span className="text-[#111418] dark:text-white text-xl md:text-2xl font-bold">{stat.value}</span>
                   <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-bold ${stat.type === 'positive' ? 'text-[#078838] bg-green-100 dark:bg-green-900/30' : 'text-orange-600 bg-orange-100 dark:bg-orange-900/30'
                     }`}>
                     {stat.change}
@@ -343,7 +343,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Planos por Apoiador</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">groups</span>
             </div>
-            <div className="h-[450px] w-full">
+            <div className="h-[350px] md:h-[450px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={apoiadoresData} layout="vertical" margin={{ left: 10, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" />
@@ -354,8 +354,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     axisLine={false}
                     tickLine={false}
                     interval={0}
-                    tick={{ fill: '#617589', fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
-                    width={160}
+                    tick={{ fill: '#617589', fontSize: 10, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
+                    width={120}
                   />
                   <Tooltip
                     cursor={{ fill: '#f3f4f6' }}
@@ -385,7 +385,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Distribuição por Categorias</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">category</span>
             </div>
-            <div className="h-[350px] w-full">
+            <div className="h-[280px] md:h-[350px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={categoriasData.slice(0, 8)} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
@@ -396,8 +396,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     axisLine={false}
                     tickLine={false}
                     interval={0}
-                    tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
-                    width={180}
+                    tick={{ fill: '#617589', fontSize: 9, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
+                    width={140}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
@@ -455,7 +455,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linha de Cuidado</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">bar_chart</span>
             </div>
-            <div className="h-[400px] w-full">
+            <div className="h-[300px] md:h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={linhaCuidadoData} layout="vertical" margin={{ left: 10, right: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e5e7eb" opacity={0.5} />
@@ -466,8 +466,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     axisLine={false}
                     tickLine={false}
                     interval={0}
-                    tick={{ fill: '#617589', fontSize: 10, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
-                    width={200}
+                    tick={{ fill: '#617589', fontSize: 9, fontWeight: '700', fontFamily: "'Inter', sans-serif" }}
+                    width={160}
                   />
                   <Tooltip
                     cursor={{ fill: 'rgba(19, 127, 236, 0.05)' }}
@@ -503,31 +503,31 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#f9fafb] dark:bg-gray-800/80 border-b border-[#e5e7eb] dark:border-gray-800">
                   <tr>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Linha de Cuidado</th>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Eixo</th>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Apoiadores</th>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Registrado</th>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Status</th>
-                    <th className="px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-right">Ação</th>
+                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Linha de Cuidado</th>
+                    <th className="hidden md:table-cell px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Eixo</th>
+                    <th className="hidden lg:table-cell px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Apoiadores</th>
+                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Registrado</th>
+                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Status</th>
+                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-right">Ação</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#dbe0e6] dark:divide-gray-700">
                   {filteredPlans.slice(0, 8).map((plan) => (
                     <tr key={plan.id} className="group hover:bg-gray-50/80 dark:hover:bg-gray-800/40 transition-all duration-200">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-primary border border-blue-100/50 dark:border-blue-800/30 transition-transform group-hover:scale-110">
+                      <td className="px-4 md:px-6 py-3 md:py-4">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-primary border border-blue-100/50 dark:border-blue-800/30 transition-transform group-hover:scale-110">
                             {plan.linha_cuidado.substring(0, 2).toUpperCase()}
                           </div>
-                          <p className="text-[#111418] dark:text-white text-xs font-bold truncate max-w-[200px]">{plan.linha_cuidado}</p>
+                          <p className="text-[#111418] dark:text-white text-[11px] md:text-xs font-bold truncate max-w-[120px] md:max-w-[200px]">{plan.linha_cuidado}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="hidden md:table-cell px-6 py-4">
                         <span className="text-[#617589] dark:text-gray-300 text-[11px] font-bold bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg border border-gray-100 dark:border-gray-700">
                           {plan.eixo}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="hidden lg:table-cell px-6 py-4">
                         <div className="flex flex-wrap gap-1.5">
                           {plan.apoiadores.slice(0, 3).map(a => (
                             <span key={a} className="px-2 py-0.5 bg-blue-50/50 dark:bg-blue-900/10 text-[10px] rounded-md text-primary font-bold border border-blue-100/30 dark:border-blue-800/20">
@@ -541,14 +541,14 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="text-[#617589] dark:text-gray-400 text-[11px] font-medium">
+                      <td className="px-3 md:px-6 py-3 md:py-4 text-center">
+                        <span className="text-[#617589] dark:text-gray-400 text-[10px] md:text-[11px] font-medium">
                           {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black border tracking-wider ${STATUS_COLORS[plan.status]}`}>
-                          {plan.status}
+                      <td className="px-3 md:px-6 py-3 md:py-4 text-center">
+                        <span className={`inline-flex items-center px-2 md:px-2.5 py-0.5 md:py-1 rounded-full text-[9px] md:text-[10px] font-black border tracking-wider ${STATUS_COLORS[plan.status]}`}>
+                          {plan.status.substring(0, 10)}{plan.status.length > 10 ? '..' : ''}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">

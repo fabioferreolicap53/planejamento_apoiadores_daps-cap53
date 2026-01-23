@@ -99,41 +99,41 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     <div className="flex flex-col h-full overflow-hidden">
       {/* Sticky Header and Filter Bar */}
       <div className="sticky top-0 z-30 bg-background-light/80 dark:bg-[#0f1721]/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
-        <div className="max-w-[1400px] mx-auto w-full px-4 sm:px-8 py-4 flex flex-col gap-4">
+        <div className="max-w-[1400px] mx-auto w-full px-3 md:px-8 py-3 md:py-4 flex flex-col gap-3 md:gap-4">
           {/* Title and Add Button */}
-          <div className="flex flex-wrap justify-between items-center gap-4">
+          <div className="flex flex-wrap justify-between items-center gap-3 md:gap-4">
             <div className="flex flex-col">
-              <div className="flex items-center gap-3">
-                <h1 className="text-[#111418] dark:text-white text-xl sm:text-2xl font-black tracking-tighter">Histórico de Planos</h1>
-                <div className="flex items-center px-2.5 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
-                  <span className="text-[10px] sm:text-xs font-bold text-primary whitespace-nowrap">
+              <div className="flex items-center gap-2 md:gap-3">
+                <h1 className="text-[#111418] dark:text-white text-lg md:text-2xl font-black tracking-tight">Histórico</h1>
+                <div className="flex items-center px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800">
+                  <span className="text-[10px] md:text-xs font-bold text-primary whitespace-nowrap">
                     {filteredPlans.length} {filteredPlans.length === 1 ? 'REGISTRO' : 'REGISTROS'}
                   </span>
                 </div>
               </div>
-              <p className="text-[#617589] dark:text-gray-400 text-xs font-medium">Arquivo Geral de Atividades Planejadas</p>
+              <p className="text-[#617589] dark:text-gray-400 text-[10px] md:text-xs font-medium">Arquivo Geral de Atividades</p>
             </div>
             <button
               onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex items-center justify-center rounded-xl h-10 px-5 bg-primary hover:bg-blue-600 text-white gap-2 text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
+              className="flex items-center justify-center rounded-xl h-10 px-4 md:px-5 bg-primary hover:bg-blue-600 text-white gap-2 text-xs md:text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[20px]">add</span>
+              <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
               <span className="hidden sm:inline">Novo Plano</span>
               <span className="sm:hidden">Novo</span>
             </button>
           </div>
 
           {/* Search and Main Filters */}
-          <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+          <div className="flex flex-col lg:flex-row gap-3 md:gap-4 items-stretch lg:items-center">
             {/* Search */}
             <div className="flex-1 min-w-0">
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[20px] group-focus-within:text-primary transition-colors">search</span>
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#617589] text-[18px] md:text-[20px] group-focus-within:text-primary transition-colors">search</span>
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="form-input flex w-full rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white/50 dark:bg-gray-800 pl-10 h-11 text-sm focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
-                  placeholder="Buscar por linha, eixo, resumo ou ID..."
+                  className="form-input flex w-full rounded-xl border border-[#dbe0e6] dark:border-gray-700 bg-white/50 dark:bg-gray-800 pl-9 md:pl-10 h-10 md:h-11 text-xs md:text-sm focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
+                  placeholder="Buscar planos..."
                 />
               </div>
             </div>
@@ -141,9 +141,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
             {/* Clear Filters */}
             <button
               onClick={clearFilters}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-sm font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all"
+              className="flex h-10 md:h-11 items-center justify-center gap-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-[#617589] dark:text-gray-400 px-4 text-xs md:text-sm font-bold border border-[#dbe0e6] dark:border-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shrink-0"
             >
-              <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
+              <span className="material-symbols-outlined text-[18px] md:text-[20px]">filter_alt_off</span>
               <span className="whitespace-nowrap">Limpar Filtros</span>
             </button>
           </div>
@@ -227,7 +227,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
       </div>
 
       <div className="flex-1 min-h-0 bg-[#f8f9fa] dark:bg-gray-950 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto w-full h-full px-4 sm:px-8 py-6 flex flex-col min-h-0">
+        <div className="max-w-[1400px] mx-auto w-full h-full px-3 md:px-8 py-4 md:py-6 flex flex-col min-h-0">
           <div className="flex-1 min-h-0 bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden transition-all flex flex-col">
             <div className="flex-1 overflow-auto">
               <table className="w-full text-left border-collapse">
@@ -251,11 +251,11 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
 
 
 
-                <tbody className="divide-y divide-[#e5e7eb] dark:divide-gray-800">
+                <tbody className="divide-y divide-[#e5e7eb] dark:divide-gray-800 text-[13px] md:text-sm">
                   {paginatedPlans.map((plan) => (
                     <tr key={plan.id} className="group hover:bg-[#f0f9ff] dark:hover:bg-blue-900/10 transition-colors">
-                      <td className="py-4 px-6 min-w-[300px] sticky left-0 bg-white dark:bg-[#1a2634] group-hover:bg-[#f0f9ff] dark:group-hover:bg-blue-900/10 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                        <div className="text-sm text-[#111418] dark:text-white font-bold line-clamp-2 leading-relaxed" title={plan.resumo}>
+                      <td className="py-3 md:py-4 px-4 md:px-6 min-w-[180px] md:min-w-[300px] sticky left-0 bg-white dark:bg-[#1a2634] group-hover:bg-[#f0f9ff] dark:group-hover:bg-blue-900/10 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
+                        <div className="font-bold line-clamp-2 leading-relaxed text-[#111418] dark:text-white" title={plan.resumo}>
                           {plan.resumo}
                         </div>
                       </td>
@@ -361,9 +361,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </table>
             </div>
 
-            <div className="sticky bottom-0 z-20 border-t border-[#e5e7eb] dark:border-gray-800 px-6 py-4 bg-[#f9fafb] dark:bg-[#1f2937] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+            <div className="sticky bottom-0 z-20 border-t border-[#e5e7eb] dark:border-gray-800 px-4 md:px-6 py-3 md:py-4 bg-[#f9fafb] dark:bg-[#1f2937] flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
               <div className="flex items-center gap-2">
-                <p className="text-sm text-[#617589]">Linhas por página:</p>
+                <p className="text-[11px] md:text-sm text-[#617589] font-medium whitespace-nowrap">
+                  <span className="hidden sm:inline">Linhas por página:</span>
+                  <span className="sm:hidden">Linhas:</span>
+                </p>
                 <select
                   value={rowsPerPage}
                   onChange={(e) => {
@@ -377,10 +380,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                   <option value={50}>50</option>
                 </select>
               </div>
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-[#617589] mr-4">
-                  {filteredPlans.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}-
-                  {Math.min(currentPage * rowsPerPage, filteredPlans.length)} de {filteredPlans.length}
+              <div className="flex items-center gap-3">
+                <p className="text-[11px] md:text-sm text-[#617589] font-medium">
+                  {filteredPlans.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}-{Math.min(currentPage * rowsPerPage, filteredPlans.length)} <span className="hidden xs:inline">de</span><span className="xs:hidden">/</span> {filteredPlans.length}
                 </p>
                 <div className="flex gap-1">
                   <button
