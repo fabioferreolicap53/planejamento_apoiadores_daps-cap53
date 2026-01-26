@@ -310,9 +310,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                         <div className="text-sm text-gray-500">{plan.avaliacao}</div>
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap">
-                        <div className="flex flex-wrap gap-1 max-w-[200px]">
+                        <div 
+                          className="flex flex-nowrap gap-1 max-w-[200px] overflow-hidden" 
+                          title={(plan.categorias || []).join(', ')}
+                        >
                           {(plan.categorias || []).map(c => (
-                            <span key={c} className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-[10px] rounded border border-emerald-100 dark:border-emerald-800">
+                            <span key={c} className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-[10px] rounded border border-emerald-100 dark:border-emerald-800 shrink-0">
                               {c}
                             </span>
                           ))}
