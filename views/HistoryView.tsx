@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Plan, Profile } from '../types';
 import { STATUS_COLORS } from '../constants';
 import { supabase } from '../lib/supabase';
 import PlanDetailsModal from '../components/PlanDetailsModal';
 import { FilterDropdown } from '../components/FilterDropdown';
+import PrintablePlanList from '../components/PrintablePlanList'; // Importar o novo componente
+import TablePrintButton from '../components/TablePrintButton';
 
 interface HistoryViewProps {
   onNavigate: (view: View) => void;
@@ -29,6 +31,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const tableRef = useRef<HTMLTableElement>(null); // Referência para a tabela
 
   const canManage = (plan: Plan) => {
     return profile?.role === 'Administrador' || profile?.id === plan.professional_id;
@@ -95,10 +99,13 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
     setCurrentPage(1);
   };
 
+
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* Sticky Header and Filter Bar */}
-      <div className="sticky top-0 z-30 bg-background-light/95 dark:bg-[#0f1721]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
+      <div className="flex flex-col h-full overflow-hidden">
+        {/* Sticky Header and Filter Bar */}
+        <div className="sticky top-0 z-30 bg-background-light/95 dark:bg-[#0f1721]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200 shadow-sm">
         <div className="max-w-[1400px] mx-auto w-full px-3 md:px-8 py-2 md:py-4 flex flex-col gap-2 md:gap-4">
           {/* Title and Add Button */}
           <div className="flex items-center justify-between">
@@ -113,14 +120,30 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
               </div>
               <p className="hidden md:block text-[#617589] dark:text-gray-400 text-xs font-medium">Arquivo Geral de Atividades</p>
             </div>
-            <button
-              onClick={() => onNavigate(View.CREATE_PLAN)}
-              className="flex items-center justify-center rounded-xl h-9 md:h-10 px-3 md:px-5 bg-primary hover:bg-blue-600 text-white gap-1.5 text-[10px] md:text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
-            >
-              <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
-              <span>Novo</span>
-              <span className="hidden sm:inline">Plano</span>
-            </button>
+            <div className="flex gap-2">
+              <TablePrintButton
+                tableRef={tableRef}
+                title="Relatório de Planos - Histórico"
+                filters={{
+                  status: filterStatus,
+                  eixo: filterEixo,
+                  linha: filterLinha,
+                  apoiador: filterApoiador,
+                  startDate: startDate,
+                  endDate: endDate,
+                  search: search,
+                }}
+                totalRecords={filteredPlans.length}
+              />
+              <button
+                onClick={() => onNavigate(View.CREATE_PLAN)}
+                className="flex items-center justify-center rounded-xl h-9 md:h-10 px-3 md:px-5 bg-primary hover:bg-blue-600 text-white gap-1.5 text-[10px] md:text-sm font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 whitespace-nowrap"
+              >
+                <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
+                <span>Novo</span>
+                <span className="hidden sm:inline">Plano</span>
+              </button>
+            </div>
           </div>
 
           {/* Search and Clear Row */}
@@ -229,7 +252,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
         <div className="max-w-[1400px] mx-auto w-full h-full px-3 md:px-8 py-4 md:py-6 flex flex-col min-h-0">
           <div className="flex-1 min-h-0 bg-white dark:bg-[#1A2633] rounded-2xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden transition-all flex flex-col">
             <div className="flex-1 overflow-auto">
-              <table className="w-full text-left border-collapse">
+              <table ref={tableRef} className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-20">
                   <tr className="bg-[#f9fafb] dark:bg-gray-800/95 border-b border-[#e5e7eb] dark:border-gray-800 text-left backdrop-blur-md">
                     <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-[#617589] sticky left-0 bg-[#f9fafb] dark:bg-gray-800 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">Planejamento (Resumo)</th>
@@ -432,6 +455,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
           </div>
         </div>
       </div>
+    </div>
 
       {selectedPlan && (
         <PlanDetailsModal
