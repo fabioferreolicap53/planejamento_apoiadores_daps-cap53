@@ -14,7 +14,7 @@ export interface Plan {
   id: string;
   professional_id: string;
   eixo: string;
-  linha_cuidado: string;
+  linha_cuidado: string[];
   status: PlanStatus;
   apoiadores: string[];
   resumo: string;
@@ -44,4 +44,22 @@ export interface User {
   id: string;
   email: string;
   profile: Profile | null;
+}
+
+export function parseLinhaCuidado(value: string | string[] | undefined): string[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === 'string' && value) {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    } catch (e) {
+      // Not a JSON string, treat as single item
+      return [value];
+    }
+  }
+  return [];
 }

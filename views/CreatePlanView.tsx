@@ -18,7 +18,12 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
   const [selectedCategories, setSelectedCategories] = useState<string[]>(editingPlan?.categorias || []);
   const [selectedApoiadores, setSelectedApoiadores] = useState<string[]>(editingPlan?.apoiadores || []);
   const [eixo, setEixo] = useState(editingPlan?.eixo || '');
-  const [linhaCuidado, setLinhaCuidado] = useState(editingPlan?.linha_cuidado || '');
+  const [linhaCuidado, setLinhaCuidado] = useState<string[]>(() => {
+    const value = editingPlan?.linha_cuidado;
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string' && value) return [value];
+    return [];
+  });
   const [status, setStatus] = useState(editingPlan?.status || '');
   const [resumo, setResumo] = useState(editingPlan?.resumo || '');
   const [meta, setMeta] = useState(editingPlan?.meta || '');
@@ -32,6 +37,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
   // States for management UI selection
   const [supporterToManage, setSupporterToManage] = useState('');
   const [categoryToManage, setCategoryToManage] = useState('');
+  const [linhaCuidadoToManage, setLinhaCuidadoToManage] = useState('');
 
   const [configOptions, setConfigOptions] = useState<{
     eixo: string[];
@@ -82,7 +88,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
           } else if (type === 'categoria' && !selectedCategories.includes(formattedLabel)) {
             setSelectedCategories([...selectedCategories, formattedLabel]);
           } else if (type === 'linha_cuidado') {
-            setLinhaCuidado(formattedLabel);
+            setLinhaCuidado(prev => prev.includes(formattedLabel) ? prev : [...prev, formattedLabel]);
           } else if (type === 'eixo') {
             setEixo(formattedLabel);
           }
@@ -92,11 +98,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     }
   };
 
-  const handleHeaderAction = (type: 'apoiador' | 'categoria') => {
-    const selected = type === 'apoiador' ? supporterToManage : categoryToManage;
-    const currentList = type === 'apoiador' ? selectedApoiadores : selectedCategories;
-    const setList = type === 'apoiador' ? setSelectedApoiadores : setSelectedCategories;
-    const setManage = type === 'apoiador' ? setSupporterToManage : setCategoryToManage;
+  const handleHeaderAction = (type: 'apoiador' | 'categoria' | 'linha_cuidado') => {
+    const selected = type === 'apoiador' ? supporterToManage : type === 'categoria' ? categoryToManage : linhaCuidadoToManage;
+    const currentList = type === 'apoiador' ? selectedApoiadores : type === 'categoria' ? selectedCategories : linhaCuidado;
+    const setList = type === 'apoiador' ? setSelectedApoiadores : type === 'categoria' ? setSelectedCategories : setLinhaCuidado;
+    const setManage = type === 'apoiador' ? setSupporterToManage : type === 'categoria' ? setCategoryToManage : setLinhaCuidadoToManage;
 
     if (selected) {
       if (!currentList.includes(selected)) {
@@ -120,6 +126,13 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
       setSelectedCategories([...selectedCategories, val]);
     }
     setCategoryToManage(''); // Reset selection
+  };
+
+  const handleLinhaCuidadoSelect = (val: string) => {
+    if (val && !linhaCuidado.includes(val)) {
+      setLinhaCuidado([...linhaCuidado, val]);
+    }
+    setLinhaCuidadoToManage(''); // Reset selection
   };
 
 
@@ -155,8 +168,23 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
       // Update existing plans to maintain consistency
       if (type === 'linha_cuidado') {
-        await supabase.from('plans').update({ linha_cuidado: formattedNewLabel }).eq('linha_cuidado', oldLabel);
-        if (linhaCuidado === oldLabel) setLinhaCuidado(formattedNewLabel);
+        // Handle array update for linha_cuidado
+        const { data: plansWithLinha } = await supabase
+          .from('plans')
+          .select('id, linha_cuidado')
+          .contains('linha_cuidado', [oldLabel]);
+
+        if (plansWithLinha) {
+          for (const plan of plansWithLinha) {
+            const updatedLinha = plan.linha_cuidado.map((a: string) => a === oldLabel ? formattedNewLabel : a);
+            await supabase.from('plans').update({ linha_cuidado: updatedLinha }).eq('id', plan.id);
+          }
+        }
+
+        // Update local state if needed
+        if (linhaCuidado.includes(oldLabel)) {
+          setLinhaCuidado(linhaCuidado.map(item => item === oldLabel ? formattedNewLabel : item));
+        }
       } else if (type === 'eixo') {
         await supabase.from('plans').update({ eixo: formattedNewLabel }).eq('eixo', oldLabel);
         if (eixo === oldLabel) setEixo(formattedNewLabel);
@@ -214,7 +242,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
         alert('Erro ao excluir item. Pode estar sendo usado por algum plano.');
       } else {
         if (type === 'eixo' && eixo === label) setEixo('');
-        if (type === 'linha_cuidado' && linhaCuidado === label) setLinhaCuidado('');
+        if (type === 'linha_cuidado' && linhaCuidado.includes(label)) setLinhaCuidado(linhaCuidado.filter(item => item !== label));
 
         // Remove from local selection state if deleted
         if (type === 'apoiador' && selectedApoiadores.includes(label)) {
@@ -237,7 +265,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
     setSelectedCategories([]);
     setSelectedApoiadores([]);
     setEixo('');
-    setLinhaCuidado('');
+    setLinhaCuidado([]);
     setStatus('');
     setResumo('');
     setMeta('');
@@ -254,6 +282,11 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
 
     if (selectedApoiadores.length === 0) {
       alert('Por favor, selecione pelo menos um apoiador envolvido.');
+      return;
+    }
+
+    if (linhaCuidado.length === 0) {
+      alert('Por favor, selecione pelo menos uma linha de cuidado.');
       return;
     }
 
@@ -413,7 +446,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center min-h-[24px]">
                     <label className="text-[#111418] text-base font-medium uppercase">
-                      LINHA DE CUIDADO <span className="text-red-500">*</span>
+                      LINHAS DE CUIDADO <span className="text-red-500">*</span>
                     </label>
                     {isAdmin && (
                       <button
@@ -429,40 +462,65 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
                   <div className="relative flex items-center gap-2">
                     <div className="relative flex-1">
                       <select
-                        value={linhaCuidado}
-                        onChange={(e) => setLinhaCuidado(e.target.value)}
-                        required
-                        disabled={!canManage}
                         className="form-select w-full rounded-lg border-gray-300 focus:border-primary h-14 pr-10 appearance-none bg-white font-medium disabled:bg-gray-50 disabled:text-gray-500"
+                        disabled={!canManage}
+                        onChange={(e) => {
+                          if (isAdmin) {
+                            setLinhaCuidadoToManage(e.target.value);
+                          } else {
+                            handleLinhaCuidadoSelect(e.target.value);
+                          }
+                        }}
+                        value={linhaCuidadoToManage}
                       >
-                        <option value="" disabled>Selecione a linha de cuidado</option>
-                        {configOptions.linha_cuidado.map(opt => (
+                        <option value="" disabled>Selecione as linhas de cuidado...</option>
+                        {configOptions.linha_cuidado.filter(opt => !linhaCuidado.includes(opt)).map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
                       </select>
                       <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">expand_more</span>
                     </div>
-                    {isAdmin && linhaCuidado && (
-                      <div className="flex gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleEditOption('linha_cuidado', linhaCuidado)}
-                          className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
-                          title="Renomear este item"
-                        >
-                          <span className="material-symbols-outlined">edit</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteOption('linha_cuidado', linhaCuidado)}
-                          className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
-                          title="Excluir este item permanentemente"
-                        >
-                          <span className="material-symbols-outlined">delete</span>
-                        </button>
-                      </div>
-                    )}
+
+                    <div className="flex gap-1">
+                      {isAdmin && linhaCuidadoToManage && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleEditOption('linha_cuidado', linhaCuidadoToManage)}
+                            className="size-10 flex items-center justify-center text-blue-500 hover:bg-blue-50 rounded-lg transition-colors border border-blue-100 flex-shrink-0"
+                            title="Renomear este item"
+                          >
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDeleteOption('linha_cuidado', linhaCuidadoToManage);
+                              setLinhaCuidadoToManage('');
+                            }}
+                            className="size-10 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-red-100 flex-shrink-0"
+                            title="Excluir este item permanentemente"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
+                  {linhaCuidado.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-1">
+                      {linhaCuidado.map(name => (
+                        <span key={name} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-primary text-xs font-bold rounded-md border border-blue-100 shadow-sm">
+                          {name}
+                          {canManage && (
+                            <button type="button" onClick={() => toggleSelection(name, linhaCuidado, setLinhaCuidado)} className="hover:text-red-500 flex items-center">
+                              <span className="material-symbols-outlined text-[16px]">close</span>
+                            </button>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

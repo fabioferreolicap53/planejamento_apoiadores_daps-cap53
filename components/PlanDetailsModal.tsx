@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Plan } from '../types';
+import { Plan, parseLinhaCuidado } from '../types';
 import { STATUS_COLORS } from '../constants';
 
 interface PlanDetailsModalProps {
@@ -48,8 +48,14 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               <p className="text-sm font-bold text-primary">{plan.eixo}</p>
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Linha de Cuidado</label>
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">{plan.linha_cuidado}</p>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Linhas de Cuidado</label>
+              <div className="flex flex-wrap gap-1">
+                {parseLinhaCuidado(plan.linha_cuidado).map((linha, idx) => (
+                  <span key={idx} className="px-2 py-0.5 bg-blue-50/50 dark:bg-blue-900/10 text-sm font-semibold text-gray-900 dark:text-white rounded-md border border-blue-100/30 dark:border-blue-800/20">
+                    {linha}
+                  </span>
+                ))}
+              </div>
             </div>
             {plan.ciclo && (
               <div className="space-y-1">

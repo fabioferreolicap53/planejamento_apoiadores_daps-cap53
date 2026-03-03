@@ -80,7 +80,9 @@ const PrintablePlanList: React.FC<PrintablePlanListProps> = ({ plans, filters })
               </td>
               <td className="p-2 border border-gray-300 align-top">
                 <div className="font-bold">{plan.eixo}</div>
-                <div className="text-gray-600">{plan.linha_cuidado}</div>
+                <div className="text-gray-600">
+                  {Array.isArray(plan.linha_cuidado) ? plan.linha_cuidado.join(', ') : plan.linha_cuidado}
+                </div>
               </td>
               <td className="p-2 border border-gray-300 text-center align-top">
                 {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'}

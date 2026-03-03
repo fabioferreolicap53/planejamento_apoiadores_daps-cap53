@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Plan } from '../types';
+import { View, Plan, parseLinhaCuidado } from '../types';
 import { STATUS_COLORS } from '../constants';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
@@ -30,13 +30,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   };
 
   // Derive unique options for filters
-  const linhaOptions = ['Todos', ...new Set(plans.map(p => p.linha_cuidado))].sort();
+  const linhaOptions = ['Todos', ...new Set(plans.flatMap(p =>
+    parseLinhaCuidado(p.linha_cuidado)
+  ))].sort();
   const eixoOptions = ['Todos', ...new Set(plans.map(p => p.eixo))].sort();
   const apoiadorOptions = ['Todos', ...new Set(plans.flatMap(p => p.apoiadores))].sort();
 
   // Filter plans based on selection
   const filteredPlans = plans.filter(p =>
-    (filterLinha === 'Todos' || p.linha_cuidado === filterLinha) &&
+    (filterLinha === 'Todos' || parseLinhaCuidado(p.linha_cuidado).includes(filterLinha)) &&
     (filterEixo === 'Todos' || p.eixo === filterEixo) &&
     (filterApoiador === 'Todos' || p.apoiadores.includes(filterApoiador))
   );
@@ -104,12 +106,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
   }, []).sort((a, b) => b.value - a.value);
 
   const linhaCuidadoData = filteredPlans.reduce((acc: any[], plan) => {
-    const existing = acc.find(l => l.name === plan.linha_cuidado);
-    if (existing) {
-      existing.value += 1;
-    } else {
-      acc.push({ name: plan.linha_cuidado, value: 1 });
-    }
+    const linhas = parseLinhaCuidado(plan.linha_cuidado);
+    linhas.forEach(linha => {
+      const existing = acc.find(l => l.name === linha);
+      if (existing) {
+        existing.value += 1;
+      } else {
+        acc.push({ name: linha, value: 1 });
+      }
+    });
     return acc;
   }, []).sort((a, b) => b.value - a.value);
 
@@ -156,7 +161,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
             <div className="w-full bg-white/50 dark:bg-[#1A2633]/50 backdrop-blur-sm rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-1 flex items-center shadow-sm focus-within:ring-2 focus-within:ring-primary/20">
               <div className="flex flex-wrap md:flex-nowrap items-center gap-1 w-full">
                 <FilterDropdown
-                  label="Linha"
+                  label="Linhas"
                   value={filterLinha}
                   options={linhaOptions}
                   onChange={setFilterLinha}
@@ -436,12 +441,12 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[#111418] dark:text-white text-base font-bold">Resolutividade por Linha</h3>
+              <h3 className="text-[#111418] dark:text-white text-base font-bold">Resolutividade por Linhas de Cuidado</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">verified</span>
             </div>
             <div className="flex-1 flex flex-col gap-4 overflow-y-auto max-h-[250px] pr-2 custom-scrollbar">
               {linhaCuidadoData.map((item) => {
-                const linhaPlans = filteredPlans.filter(p => p.linha_cuidado === item.name);
+                const linhaPlans = filteredPlans.filter(p => parseLinhaCuidado(p.linha_cuidado).includes(item.name));
                 const linhaConcluded = linhaPlans.filter(p => p.status === 'CONCLUÍDO').length;
                 const percentage = linhaPlans.length > 0 ? Math.round((linhaConcluded / linhaPlans.length) * 100) : 0;
                 return (
@@ -461,7 +466,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
 
           <div className="lg:col-span-2 flex flex-col p-4 rounded-2xl bg-white dark:bg-[#1A2633] border border-[#dbe0e6] dark:border-gray-700 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linha de Cuidado</h3>
+              <h3 className="text-[#111418] dark:text-white text-base font-bold">Volume por Linhas de Cuidado</h3>
               <span className="material-symbols-outlined text-gray-400 text-lg">bar_chart</span>
             </div>
             <div className="h-[300px] md:h-[400px] w-full">
@@ -512,7 +517,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#f9fafb] dark:bg-gray-800/80 border-b border-[#e5e7eb] dark:border-gray-800">
                   <tr>
-                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Linha de Cuidado</th>
+                    <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Linhas de Cuidado</th>
                     <th className="hidden md:table-cell px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Eixo</th>
                     <th className="hidden lg:table-cell px-6 py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider">Apoiadores</th>
                     <th className="px-4 md:px-6 py-3 md:py-4 text-[#617589] dark:text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center">Registrado</th>
@@ -525,10 +530,27 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, plans }) => {
                     <tr key={plan.id} className="group hover:bg-gray-50/80 dark:hover:bg-gray-800/40 transition-all duration-200">
                       <td className="px-4 md:px-6 py-3 md:py-4">
                         <div className="flex items-center gap-2 md:gap-3">
-                          <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-primary border border-blue-100/50 dark:border-blue-800/30 transition-transform group-hover:scale-110">
-                            {plan.linha_cuidado.substring(0, 2).toUpperCase()}
-                          </div>
-                          <p className="text-[#111418] dark:text-white text-[11px] md:text-xs font-bold truncate max-w-[120px] md:max-w-[200px]">{plan.linha_cuidado}</p>
+                          {(() => {
+                            const linhas = parseLinhaCuidado(plan.linha_cuidado);
+                            const primeiraLinha = linhas[0] || '';
+                            return (
+                              <>
+                                <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-primary border border-blue-100/50 dark:border-blue-800/30 transition-transform group-hover:scale-110">
+                                  {primeiraLinha.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="flex flex-col">
+                                  {linhas.slice(0, 2).map((linha, idx) => (
+                                    <p key={idx} className="text-[#111418] dark:text-white text-[11px] md:text-xs font-bold truncate max-w-[120px] md:max-w-[200px]">
+                                      {linha}
+                                    </p>
+                                  ))}
+                                  {linhas.length > 2 && (
+                                    <span className="text-[#617589] text-[10px]">+{linhas.length - 2} mais</span>
+                                  )}
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </td>
                       <td className="hidden md:table-cell px-6 py-4">
