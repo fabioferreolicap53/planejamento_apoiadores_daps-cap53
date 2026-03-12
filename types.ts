@@ -46,20 +46,64 @@ export interface User {
   profile: Profile | null;
 }
 
-export function parseLinhaCuidado(value: string | string[] | undefined): string[] {
-  if (Array.isArray(value)) {
-    return value;
-  }
-  if (typeof value === 'string' && value) {
-    try {
-      const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    } catch (e) {
-      // Not a JSON string, treat as single item
-      return [value];
+// Helper function to recursively clean strings
+function recursiveClean(val: any): string[] {
+  if (val === null || val === undefined) return [];
+  if (typeof val !== 'string') return [String(val)];
+  
+  let current = val.trim();
+  if (!current) return [];
+  
+  // Try JSON parse first
+  try {
+    const parsed = JSON.parse(current);
+    if (Array.isArray(parsed)) {
+      return parsed.flatMap(recursiveClean);
     }
+    if (typeof parsed === 'string' && parsed !== current) {
+      return recursiveClean(parsed);
+    }
+    if (typeof parsed !== 'string') {
+        return [String(parsed)];
+    }
+  } catch (e) {
+    // Ignore parse error
   }
-  return [];
+
+  // Handle array-like strings [A, B]
+  if (current.startsWith('[') && current.endsWith(']')) {
+    const content = current.slice(1, -1);
+    if (!content.trim()) return [];
+    return content.split(',').flatMap(part => recursiveClean(part.trim()));
+  }
+
+  // Handle quotes
+  if ((current.startsWith('"') && current.endsWith('"')) || (current.startsWith("'") && current.endsWith("'"))) {
+     return recursiveClean(current.slice(1, -1));
+  }
+  
+  return [current];
+}
+
+export function parseLinhaCuidado(value: string | string[] | undefined): string[] {
+  if (!value) return [];
+
+  let initialInput: any[] = [];
+  if (Array.isArray(value)) {
+    initialInput = value;
+  } else {
+    initialInput = [value];
+  }
+
+  const result = new Set<string>();
+  
+  initialInput.forEach(item => {
+    recursiveClean(item).forEach(cleaned => {
+        if (cleaned && cleaned !== 'null' && cleaned !== 'undefined') {
+            result.add(cleaned);
+        }
+    });
+  });
+  
+  return Array.from(result);
 }

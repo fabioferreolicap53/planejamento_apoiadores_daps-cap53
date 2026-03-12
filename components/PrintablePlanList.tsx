@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plan } from '../types';
+import { Plan, parseLinhaCuidado } from '../types';
 import { STATUS_COLORS } from '../constants';
 
 interface PrintablePlanListProps {
@@ -81,7 +81,7 @@ const PrintablePlanList: React.FC<PrintablePlanListProps> = ({ plans, filters })
               <td className="p-2 border border-gray-300 align-top">
                 <div className="font-bold">{plan.eixo}</div>
                 <div className="text-gray-600">
-                  {Array.isArray(plan.linha_cuidado) ? plan.linha_cuidado.join(', ') : plan.linha_cuidado}
+                  {parseLinhaCuidado(plan.linha_cuidado).join(', ')}
                 </div>
               </td>
               <td className="p-2 border border-gray-300 text-center align-top">
