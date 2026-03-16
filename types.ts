@@ -82,7 +82,10 @@ function recursiveClean(val: any): string[] {
      return recursiveClean(current.slice(1, -1));
   }
   
-  return [current];
+  // Final aggressive cleanup for nested JSON artifacts
+  current = current.replace(/[\[\]"'\\]/g, '').trim();
+  
+  return current ? [current] : [];
 }
 
 export function parseLinhaCuidado(value: string | string[] | undefined): string[] {

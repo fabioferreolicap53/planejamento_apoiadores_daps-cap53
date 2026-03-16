@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Plan, Profile } from '../types';
+import { View, Plan, Profile, parseLinhaCuidado } from '../types';
 import { STATUS_COLORS } from '../constants';
 import { supabase } from '../lib/supabase';
 
@@ -19,10 +19,7 @@ const CreatePlanView: React.FC<CreatePlanViewProps> = ({ onNavigate, onSaveSucce
   const [selectedApoiadores, setSelectedApoiadores] = useState<string[]>(editingPlan?.apoiadores || []);
   const [eixo, setEixo] = useState(editingPlan?.eixo || '');
   const [linhaCuidado, setLinhaCuidado] = useState<string[]>(() => {
-    const value = editingPlan?.linha_cuidado;
-    if (Array.isArray(value)) return value;
-    if (typeof value === 'string' && value) return [value];
-    return [];
+    return parseLinhaCuidado(editingPlan?.linha_cuidado);
   });
   const [status, setStatus] = useState(editingPlan?.status || '');
   const [resumo, setResumo] = useState(editingPlan?.resumo || '');
