@@ -303,7 +303,7 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-full border-t border-gray-400 mb-1"></div>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Unidade / Gerência</p>
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Direção / Gerência</p>
                 </div>
               </div>
               <div className="mt-6 text-center">
