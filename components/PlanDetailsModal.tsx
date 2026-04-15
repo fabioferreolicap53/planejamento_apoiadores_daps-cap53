@@ -190,33 +190,33 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
                   </div>
                   <h1 className="text-xl font-black text-primary tracking-tighter uppercase">DAPS / CAP 5.3</h1>
                 </div>
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Relatório de Planejamento Profissional</p>
+                <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Relatório de Planejamento Profissional</p>
               </div>
               <div className="text-right flex flex-col items-end gap-0.5">
-                <div className="bg-gray-100 px-2 py-0.5 rounded-full text-[9px] font-bold text-gray-600">
+                <div className="bg-gray-100 px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-600">
                   REGISTRO: {plan.id.slice(0, 8).toUpperCase()}
                 </div>
-                <p className="text-[9px] font-medium text-gray-400">Emissão: {new Date().toLocaleString('pt-BR')}</p>
+                <p className="text-[10px] font-medium text-gray-400">Emissão: {new Date().toLocaleString('pt-BR')}</p>
               </div>
             </div>
 
             {/* Status & Key Info Banner - Compacted */}
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Status</label>
-                <p className="text-[10px] font-bold text-primary">{plan.status}</p>
+                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Status</label>
+                <p className="text-[11px] font-bold text-primary">{plan.status}</p>
               </div>
               <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Eixo Estratégico</label>
-                <p className="text-[10px] font-bold text-gray-700 truncate">{plan.eixo}</p>
+                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Eixo Estratégico</label>
+                <p className="text-[11px] font-bold text-gray-700 truncate">{plan.eixo}</p>
               </div>
               <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Ciclo</label>
-                <p className="text-[10px] font-bold text-gray-700">{plan.ciclo || '-'}</p>
+                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Ciclo</label>
+                <p className="text-[11px] font-bold text-gray-700">{plan.ciclo || '-'}</p>
               </div>
               <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Período</label>
-                <p className="text-[9px] font-bold text-gray-700">
+                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Período</label>
+                <p className="text-[10px] font-bold text-gray-700">
                   {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'} 
                   <span className="mx-0.5 text-gray-300">|</span> 
                   {plan.data_final ? new Date(plan.data_final).toLocaleDateString('pt-BR') : '-'}
@@ -229,9 +229,9 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               {/* Resumo */}
               <section>
                 <div className="flex items-center gap-2 mb-1.5 border-l-3 border-primary pl-2">
-                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Resumo das Atividades</h3>
+                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Resumo das Atividades</h3>
                 </div>
-                <div className="text-[11px] text-gray-700 leading-snug bg-white px-1">
+                <div className="text-[12px] text-gray-700 leading-snug bg-white px-1">
                   {plan.resumo}
                 </div>
               </section>
@@ -239,9 +239,9 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               {/* Meta */}
               <section>
                 <div className="flex items-center gap-2 mb-1.5 border-l-3 border-amber-500 pl-2">
-                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Meta Pactuada</h3>
+                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Meta Pactuada</h3>
                 </div>
-                <div className="text-[11px] font-bold italic text-gray-800 leading-snug bg-amber-50/20 p-2.5 rounded-xl border border-amber-100/30">
+                <div className="text-[12px] font-bold italic text-gray-800 leading-snug bg-amber-50/20 p-2.5 rounded-xl border border-amber-100/30">
                   "{plan.meta}"
                 </div>
               </section>
@@ -250,11 +250,11 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               <div className="grid grid-cols-2 gap-6">
                 <section>
                   <div className="flex items-center gap-2 mb-1.5 border-l-3 border-blue-400 pl-2">
-                    <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Linhas de Cuidado</h3>
+                    <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Linhas de Cuidado</h3>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {parseLinhaCuidado(plan.linha_cuidado).map((l, i) => (
-                      <span key={i} className="text-[9px] font-bold px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100">
+                      <span key={i} className="text-[10px] font-bold px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100">
                         {l}
                       </span>
                     ))}
@@ -262,9 +262,9 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
                 </section>
                 <section>
                   <div className="flex items-center gap-2 mb-1.5 border-l-3 border-emerald-400 pl-2">
-                    <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Apoiadores Envolvidos</h3>
+                    <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Apoiadores Envolvidos</h3>
                   </div>
-                  <p className="text-[10px] font-medium text-gray-700 leading-tight">
+                  <p className="text-[11px] font-medium text-gray-700 leading-tight">
                     {plan.apoiadores?.join(', ') || 'Nenhum listado'}
                   </p>
                 </section>
@@ -273,9 +273,9 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               {/* Avaliação */}
               <section>
                 <div className="flex items-center gap-2 mb-1.5 border-l-3 border-purple-400 pl-2">
-                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Avaliação de Resultados</h3>
+                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Avaliação de Resultados</h3>
                 </div>
-                <div className="text-[11px] text-gray-700 leading-snug min-h-[40px]">
+                <div className="text-[12px] text-gray-700 leading-snug min-h-[40px]">
                   {plan.avaliacao || 'Nenhuma avaliação registrada até o momento.'}
                 </div>
               </section>
@@ -284,8 +284,8 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               {plan.observacoes && (
                 <section>
                   <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
-                    <h3 className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Notas Adicionais</h3>
-                    <p className="text-[10px] italic text-gray-600 leading-tight">
+                    <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Notas Adicionais</h3>
+                    <p className="text-[11px] italic text-gray-600 leading-tight">
                       {plan.observacoes}
                     </p>
                   </div>
@@ -298,16 +298,16 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               <div className="grid grid-cols-2 gap-12">
                 <div className="flex flex-col items-center">
                   <div className="w-full border-t border-gray-400 mb-1"></div>
-                  <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Assinatura do Profissional</p>
-                  <p className="text-[7px] text-gray-300 mt-0.5">Data: ____/____/_______</p>
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Assinatura do Profissional</p>
+                  <p className="text-[8px] text-gray-300 mt-0.5">Data: ____/____/_______</p>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-full border-t border-gray-400 mb-1"></div>
-                  <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Unidade / Gerência</p>
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Unidade / Gerência</p>
                 </div>
               </div>
               <div className="mt-6 text-center">
-                <p className="text-[7px] text-gray-300 font-medium tracking-widest uppercase">
+                <p className="text-[8px] text-gray-300 font-medium tracking-widest uppercase">
                   Documento gerado eletronicamente pelo Sistema de Planejamento DAPS/CAP 5.3
                 </p>
               </div>
