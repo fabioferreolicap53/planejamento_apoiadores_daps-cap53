@@ -162,13 +162,127 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end bg-gray-50/30 dark:bg-gray-800/20">
+        <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3 bg-gray-50/30 dark:bg-gray-800/20 no-print">
+          <button
+            onClick={() => window.print()}
+            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-[20px]">print</span>
+            Imprimir
+          </button>
           <button
             onClick={onClose}
             className="px-8 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
           >
             Fechar
           </button>
+        </div>
+
+        {/* Hidden Printable Version */}
+        <div className="hidden print:block print:absolute print:inset-0 print:bg-white print:z-[9999] print:overflow-visible">
+          <div className="p-10 text-black max-w-4xl mx-auto print-container">
+            {/* Header for Print */}
+            <div className="flex justify-between items-start border-b-2 border-blue-900 pb-6 mb-8 no-border-on-print">
+              <div>
+                <h1 className="text-2xl font-black text-blue-900 uppercase tracking-tighter">DAPS / CAP 5.3</h1>
+                <p className="text-sm font-bold text-gray-600">Detalhes do Planejamento Profissional</p>
+              </div>
+              <div className="text-right text-xs text-gray-500 font-medium">
+                <p>Gerado em: {new Date().toLocaleString('pt-BR')}</p>
+                <p>ID do Plano: {plan.id}</p>
+              </div>
+            </div>
+
+            {/* Print Content Grid */}
+            <div className="grid grid-cols-2 gap-8 mb-8">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Status</label>
+                <p className="text-sm font-bold border border-gray-200 rounded px-2 py-1 inline-block">{plan.status}</p>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Eixo</label>
+                <p className="text-sm font-bold text-blue-900">{plan.eixo}</p>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Linhas de Cuidado</label>
+                <p className="text-sm font-medium">{parseLinhaCuidado(plan.linha_cuidado).join(', ')}</p>
+              </div>
+              {plan.ciclo && (
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Ciclo</label>
+                  <p className="text-sm font-medium">{plan.ciclo}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-8 mb-8">
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <label className="text-[10px] font-bold uppercase text-blue-400 block mb-1">Data Inicial</label>
+                <p className="text-sm font-bold text-blue-700">
+                  {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'}
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <label className="text-[10px] font-bold uppercase text-emerald-400 block mb-1">Data Final</label>
+                <p className="text-sm font-bold text-emerald-700">
+                  {plan.data_final ? new Date(plan.data_final).toLocaleDateString('pt-BR') : '-'}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6 mb-8">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Resumo do Planejamento</label>
+                <div className="p-4 rounded-xl border border-gray-200 text-sm leading-relaxed min-h-[60px]">
+                  {plan.resumo}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Meta a ser Alcançada</label>
+                <div className="p-4 rounded-xl border-l-4 border-l-blue-900 border-y border-r border-gray-200 text-sm leading-relaxed font-bold italic">
+                  "{plan.meta}"
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Avaliação dos Resultados</label>
+                <div className="p-4 rounded-xl border border-gray-200 text-sm leading-relaxed">
+                  {plan.avaliacao || 'Nenhuma avaliação registrada.'}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8 mb-8">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Apoiadores Envolvidos</label>
+                <p className="text-sm font-medium">{plan.apoiadores?.join(', ') || 'Nenhum'}</p>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Categorias</label>
+                <p className="text-sm font-medium">{plan.categorias?.join(', ') || 'Nenhuma'}</p>
+              </div>
+            </div>
+
+            {plan.observacoes && (
+              <div className="space-y-2 mb-10">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Observações Adicionais</label>
+                <p className="text-sm italic text-gray-500 p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                  {plan.observacoes}
+                </p>
+              </div>
+            )}
+
+            {/* Signature Section for Print */}
+            <div className="mt-20 pt-10 flex justify-around border-t border-gray-200">
+              <div className="text-center">
+                <div className="w-64 border-b border-black mb-2"></div>
+                <p className="text-[10px] font-bold uppercase">Assinatura do Profissional</p>
+              </div>
+              <div className="text-center">
+                <div className="w-64 border-b border-black mb-2"></div>
+                <p className="text-[10px] font-bold uppercase">Carimbo da Unidade</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
