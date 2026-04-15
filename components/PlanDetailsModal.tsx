@@ -179,107 +179,137 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
         </div>
 
         {/* Hidden Printable Version */}
-        <div className="hidden print:block print:absolute print:inset-0 print:bg-white print:z-[9999] print:overflow-visible">
-          <div className="p-10 text-black max-w-4xl mx-auto print-container">
-            {/* Header for Print */}
-            <div className="flex justify-between items-start border-b-2 border-blue-900 pb-6 mb-8 no-border-on-print">
-              <div>
-                <h1 className="text-2xl font-black text-blue-900 uppercase tracking-tighter">DAPS / CAP 5.3</h1>
-                <p className="text-sm font-bold text-gray-600">Detalhes do Planejamento Profissional</p>
-              </div>
-              <div className="text-right text-xs text-gray-500 font-medium">
-                <p>Gerado em: {new Date().toLocaleString('pt-BR')}</p>
-                <p>ID do Plano: {plan.id}</p>
-              </div>
-            </div>
-
-            {/* Print Content Grid */}
-            <div className="grid grid-cols-2 gap-8 mb-8">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Status</label>
-                <p className="text-sm font-bold border border-gray-200 rounded px-2 py-1 inline-block">{plan.status}</p>
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Eixo</label>
-                <p className="text-sm font-bold text-blue-900">{plan.eixo}</p>
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Linhas de Cuidado</label>
-                <p className="text-sm font-medium">{parseLinhaCuidado(plan.linha_cuidado).join(', ')}</p>
-              </div>
-              {plan.ciclo && (
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Ciclo</label>
-                  <p className="text-sm font-medium">{plan.ciclo}</p>
+        <div className="hidden print:block fixed inset-0 bg-white z-[9999] overflow-visible">
+          <div className="p-6 text-[#111418] max-w-[210mm] mx-auto bg-white min-h-screen flex flex-col">
+            {/* Elegant Compact Header */}
+            <div className="relative border-b-2 border-primary pb-4 mb-4 flex justify-between items-end">
+              <div className="flex flex-col gap-0.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-lg">health_and_safety</span>
+                  </div>
+                  <h1 className="text-xl font-black text-primary tracking-tighter uppercase">DAPS / CAP 5.3</h1>
                 </div>
-              )}
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Relatório de Planejamento Profissional</p>
+              </div>
+              <div className="text-right flex flex-col items-end gap-0.5">
+                <div className="bg-gray-100 px-2 py-0.5 rounded-full text-[9px] font-bold text-gray-600">
+                  REGISTRO: {plan.id.slice(0, 8).toUpperCase()}
+                </div>
+                <p className="text-[9px] font-medium text-gray-400">Emissão: {new Date().toLocaleString('pt-BR')}</p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 mb-8">
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
-                <label className="text-[10px] font-bold uppercase text-blue-400 block mb-1">Data Inicial</label>
-                <p className="text-sm font-bold text-blue-700">
-                  {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'}
-                </p>
+            {/* Status & Key Info Banner - Compacted */}
+            <div className="grid grid-cols-4 gap-3 mb-6">
+              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Status</label>
+                <p className="text-[10px] font-bold text-primary">{plan.status}</p>
               </div>
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
-                <label className="text-[10px] font-bold uppercase text-emerald-400 block mb-1">Data Final</label>
-                <p className="text-sm font-bold text-emerald-700">
+              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Eixo Estratégico</label>
+                <p className="text-[10px] font-bold text-gray-700 truncate">{plan.eixo}</p>
+              </div>
+              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Ciclo</label>
+                <p className="text-[10px] font-bold text-gray-700">{plan.ciclo || '-'}</p>
+              </div>
+              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                <label className="text-[8px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Período</label>
+                <p className="text-[9px] font-bold text-gray-700">
+                  {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'} 
+                  <span className="mx-0.5 text-gray-300">|</span> 
                   {plan.data_final ? new Date(plan.data_final).toLocaleDateString('pt-BR') : '-'}
                 </p>
               </div>
             </div>
 
-            <div className="space-y-6 mb-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Resumo do Planejamento</label>
-                <div className="p-4 rounded-xl border border-gray-200 text-sm leading-relaxed min-h-[60px]">
+            {/* Main Content Sections - Compacted Spacing */}
+            <div className="space-y-4 flex-1">
+              {/* Resumo */}
+              <section>
+                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-primary pl-2">
+                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Resumo das Atividades</h3>
+                </div>
+                <div className="text-[11px] text-gray-700 leading-snug bg-white px-1">
                   {plan.resumo}
                 </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Meta a ser Alcançada</label>
-                <div className="p-4 rounded-xl border-l-4 border-l-blue-900 border-y border-r border-gray-200 text-sm leading-relaxed font-bold italic">
+              </section>
+
+              {/* Meta */}
+              <section>
+                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-amber-500 pl-2">
+                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Meta Pactuada</h3>
+                </div>
+                <div className="text-[11px] font-bold italic text-gray-800 leading-snug bg-amber-50/20 p-2.5 rounded-xl border border-amber-100/30">
                   "{plan.meta}"
                 </div>
+              </section>
+
+              {/* Two Column Section */}
+              <div className="grid grid-cols-2 gap-6">
+                <section>
+                  <div className="flex items-center gap-2 mb-1.5 border-l-3 border-blue-400 pl-2">
+                    <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Linhas de Cuidado</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {parseLinhaCuidado(plan.linha_cuidado).map((l, i) => (
+                      <span key={i} className="text-[9px] font-bold px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100">
+                        {l}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+                <section>
+                  <div className="flex items-center gap-2 mb-1.5 border-l-3 border-emerald-400 pl-2">
+                    <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Apoiadores Envolvidos</h3>
+                  </div>
+                  <p className="text-[10px] font-medium text-gray-700 leading-tight">
+                    {plan.apoiadores?.join(', ') || 'Nenhum listado'}
+                  </p>
+                </section>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Avaliação dos Resultados</label>
-                <div className="p-4 rounded-xl border border-gray-200 text-sm leading-relaxed">
-                  {plan.avaliacao || 'Nenhuma avaliação registrada.'}
+
+              {/* Avaliação */}
+              <section>
+                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-purple-400 pl-2">
+                  <h3 className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Avaliação de Resultados</h3>
+                </div>
+                <div className="text-[11px] text-gray-700 leading-snug min-h-[40px]">
+                  {plan.avaliacao || 'Nenhuma avaliação registrada até o momento.'}
+                </div>
+              </section>
+
+              {/* Observações - More compact */}
+              {plan.observacoes && (
+                <section>
+                  <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                    <h3 className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Notas Adicionais</h3>
+                    <p className="text-[10px] italic text-gray-600 leading-tight">
+                      {plan.observacoes}
+                    </p>
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* Signature Section - Positioned at bottom of page */}
+            <div className="pt-6 mt-4 border-t border-gray-100">
+              <div className="grid grid-cols-2 gap-12">
+                <div className="flex flex-col items-center">
+                  <div className="w-full border-t border-gray-400 mb-1"></div>
+                  <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Assinatura do Profissional</p>
+                  <p className="text-[7px] text-gray-300 mt-0.5">Data: ____/____/_______</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="w-full border-t border-gray-400 mb-1"></div>
+                  <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Unidade / Gerência</p>
                 </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-8 mb-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Apoiadores Envolvidos</label>
-                <p className="text-sm font-medium">{plan.apoiadores?.join(', ') || 'Nenhum'}</p>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Categorias</label>
-                <p className="text-sm font-medium">{plan.categorias?.join(', ') || 'Nenhuma'}</p>
-              </div>
-            </div>
-
-            {plan.observacoes && (
-              <div className="space-y-2 mb-10">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">Observações Adicionais</label>
-                <p className="text-sm italic text-gray-500 p-4 bg-gray-50 border border-gray-200 rounded-xl">
-                  {plan.observacoes}
+              <div className="mt-6 text-center">
+                <p className="text-[7px] text-gray-300 font-medium tracking-widest uppercase">
+                  Documento gerado eletronicamente pelo Sistema de Planejamento DAPS/CAP 5.3
                 </p>
-              </div>
-            )}
-
-            {/* Signature Section for Print */}
-            <div className="mt-20 pt-10 flex justify-around border-t border-gray-200">
-              <div className="text-center">
-                <div className="w-64 border-b border-black mb-2"></div>
-                <p className="text-[10px] font-bold uppercase">Assinatura do Profissional</p>
-              </div>
-              <div className="text-center">
-                <div className="w-64 border-b border-black mb-2"></div>
-                <p className="text-[10px] font-bold uppercase">Carimbo da Unidade</p>
               </div>
             </div>
           </div>
