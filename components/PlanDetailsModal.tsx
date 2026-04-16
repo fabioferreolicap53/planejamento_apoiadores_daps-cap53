@@ -185,38 +185,38 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
             <div className="relative border-b-2 border-primary pb-4 mb-4 flex justify-between items-end">
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-lg">health_and_safety</span>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-xl">health_and_safety</span>
                   </div>
-                  <h1 className="text-xl font-black text-primary tracking-tighter uppercase">DAPS / CAP 5.3</h1>
+                  <h1 className="text-2xl font-black text-primary tracking-tighter uppercase">DAPS / CAP 5.3</h1>
                 </div>
-                <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Relatório de Planejamento Profissional</p>
+                <p className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Relatório de Planejamento Profissional</p>
               </div>
               <div className="text-right flex flex-col items-end gap-0.5">
-                <div className="bg-gray-100 px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-600">
+                <div className="bg-gray-100 px-2 py-0.5 rounded-full text-[11px] font-bold text-gray-600">
                   REGISTRO: {plan.id.slice(0, 8).toUpperCase()}
                 </div>
-                <p className="text-[10px] font-medium text-gray-400">Emissão: {new Date().toLocaleString('pt-BR')}</p>
+                <p className="text-[11px] font-medium text-gray-400">Emissão: {new Date().toLocaleString('pt-BR')}</p>
               </div>
             </div>
 
             {/* Status & Key Info Banner - Compacted */}
             <div className="grid grid-cols-4 gap-3 mb-6">
-              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Status</label>
-                <p className="text-[11px] font-bold text-primary">{plan.status}</p>
+              <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Status</label>
+                <p className="text-[12px] font-bold text-primary">{plan.status}</p>
               </div>
-              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Eixo Estratégico</label>
-                <p className="text-[11px] font-bold text-gray-700 truncate">{plan.eixo}</p>
+              <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Eixo Estratégico</label>
+                <p className="text-[12px] font-bold text-gray-700 truncate">{plan.eixo}</p>
               </div>
-              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Ciclo</label>
-                <p className="text-[11px] font-bold text-gray-700">{plan.ciclo || '-'}</p>
+              <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Ciclo</label>
+                <p className="text-[12px] font-bold text-gray-700">{plan.ciclo || '-'}</p>
               </div>
-              <div className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Período</label>
-                <p className="text-[10px] font-bold text-gray-700">
+              <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-0.5">Período</label>
+                <p className="text-[11px] font-bold text-gray-700">
                   {plan.data_inicial ? new Date(plan.data_inicial).toLocaleDateString('pt-BR') : '-'} 
                   <span className="mx-0.5 text-gray-300">|</span> 
                   {plan.data_final ? new Date(plan.data_final).toLocaleDateString('pt-BR') : '-'}
@@ -225,57 +225,73 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
             </div>
 
             {/* Main Content Sections - Compacted Spacing */}
-            <div className="space-y-4 flex-1">
+            <div className="space-y-6 flex-1">
               {/* Resumo */}
               <section>
-                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-primary pl-2">
-                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Resumo das Atividades</h3>
+                <div className="flex items-center gap-2 mb-2 border-l-3 border-primary pl-2">
+                  <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Resumo das Atividades</h3>
                 </div>
-                <div className="text-[12px] text-gray-700 leading-snug bg-white px-1">
+                <div className="text-[13px] text-gray-700 leading-snug bg-white px-1">
                   {plan.resumo}
                 </div>
               </section>
 
               {/* Meta */}
               <section>
-                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-amber-500 pl-2">
-                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Meta Pactuada</h3>
+                <div className="flex items-center gap-2 mb-2 border-l-3 border-amber-500 pl-2">
+                  <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Meta Pactuada</h3>
                 </div>
-                <div className="text-[12px] font-bold italic text-gray-800 leading-snug bg-amber-50/20 p-2.5 rounded-xl border border-amber-100/30">
+                <div className="text-[13px] font-bold italic text-gray-800 leading-snug bg-amber-50/20 p-3 rounded-xl border border-amber-100/30">
                   "{plan.meta}"
                 </div>
               </section>
 
               {/* Two Column Section */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-8">
                 <section>
-                  <div className="flex items-center gap-2 mb-1.5 border-l-3 border-blue-400 pl-2">
-                    <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Linhas de Cuidado</h3>
+                  <div className="flex items-center gap-2 mb-2 border-l-3 border-blue-400 pl-2">
+                    <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Linhas de Cuidado Envolvidas</h3>
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {parseLinhaCuidado(plan.linha_cuidado).map((l, i) => (
-                      <span key={i} className="text-[10px] font-bold px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100">
+                      <span key={i} className="text-[11px] font-bold px-2 py-1 bg-gray-50 text-gray-700 rounded border border-gray-200">
                         {l}
                       </span>
                     ))}
                   </div>
                 </section>
                 <section>
-                  <div className="flex items-center gap-2 mb-1.5 border-l-3 border-emerald-400 pl-2">
-                    <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Apoiadores Envolvidos</h3>
+                  <div className="flex items-center gap-2 mb-2 border-l-3 border-emerald-400 pl-2">
+                    <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Apoiadores Envolvidos</h3>
                   </div>
-                  <p className="text-[11px] font-medium text-gray-700 leading-tight">
+                  <p className="text-[12px] font-medium text-gray-700 leading-tight">
                     {plan.apoiadores?.join(', ') || 'Nenhum listado'}
                   </p>
                 </section>
               </div>
 
+              {/* Categorias Profissionais */}
+              {plan.categorias && plan.categorias.length > 0 && (
+                <section>
+                  <div className="flex items-center gap-2 mb-2 border-l-3 border-gray-400 pl-2">
+                    <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Categorias Profissionais Envolvidas</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {plan.categorias.map((c, i) => (
+                      <span key={i} className="text-[11px] font-bold px-2 py-1 bg-gray-50 text-gray-700 rounded border border-gray-200">
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {/* Avaliação */}
               <section>
-                <div className="flex items-center gap-2 mb-1.5 border-l-3 border-purple-400 pl-2">
-                  <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Avaliação de Resultados</h3>
+                <div className="flex items-center gap-2 mb-2 border-l-3 border-purple-400 pl-2">
+                  <h3 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Avaliação de Resultados</h3>
                 </div>
-                <div className="text-[12px] text-gray-700 leading-snug min-h-[40px]">
+                <div className="text-[13px] text-gray-700 leading-snug min-h-[40px]">
                   {plan.avaliacao || 'Nenhuma avaliação registrada até o momento.'}
                 </div>
               </section>
@@ -283,9 +299,9 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               {/* Observações - More compact */}
               {plan.observacoes && (
                 <section>
-                  <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
-                    <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Notas Adicionais</h3>
-                    <p className="text-[11px] italic text-gray-600 leading-tight">
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Notas Adicionais</h3>
+                    <p className="text-[12px] italic text-gray-600 leading-tight">
                       {plan.observacoes}
                     </p>
                   </div>
@@ -293,21 +309,10 @@ const PlanDetailsModal: React.FC<PlanDetailsModalProps> = ({ plan, onClose }) =>
               )}
             </div>
 
-            {/* Signature Section - Positioned at bottom of page */}
-            <div className="pt-6 mt-4 border-t border-gray-100">
-              <div className="grid grid-cols-2 gap-12">
-                <div className="flex flex-col items-center">
-                  <div className="w-full border-t border-gray-400 mb-1"></div>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Assinatura do Profissional</p>
-                  <p className="text-[8px] text-gray-300 mt-0.5">Data: ____/____/_______</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-full border-t border-gray-400 mb-1"></div>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Carimbo da Direção / Gerência</p>
-                </div>
-              </div>
-              <div className="mt-6 text-center">
-                <p className="text-[8px] text-gray-300 font-medium tracking-widest uppercase">
+            {/* Footer - Positioned at bottom of page */}
+            <div className="pt-6 mt-6 border-t border-gray-100">
+              <div className="text-center">
+                <p className="text-[10px] text-gray-300 font-medium tracking-widest uppercase">
                   Documento gerado eletronicamente pelo Sistema de Planejamento DAPS/CAP 5.3
                 </p>
               </div>
