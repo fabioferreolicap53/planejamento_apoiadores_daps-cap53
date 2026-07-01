@@ -308,8 +308,12 @@ const HistoryView: React.FC<HistoryViewProps> = ({ onNavigate, plans, onEdit, on
                             <div className="flex flex-col">
                               {(() => {
                                 const linhas = parseLinhaCuidado(plan.linha_cuidado);
+                                const criador = plan.profiles?.full_name || plan.profiles?.username || 'Desconhecido';
                                 return (
                                   <>
+                                    <div className="text-[10px] text-gray-400 font-medium">
+                                      Criado por: <span className="text-gray-500 font-semibold">{criador}</span>
+                                    </div>
                                     {linhas.slice(0, 2).map((linha, idx) => (
                                       <div key={idx} className="text-sm font-medium text-[#111418] dark:text-white capitalize">
                                         {linha.toLowerCase()}

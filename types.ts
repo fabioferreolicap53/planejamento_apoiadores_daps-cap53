@@ -26,6 +26,7 @@ export interface Plan {
   data_final: string;
   observacoes?: string;
   created_at?: string;
+  profiles?: { username?: string; full_name?: string } | null;
 }
 
 export interface Profile {

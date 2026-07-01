@@ -43,25 +43,33 @@ const App: React.FC = () => {
       .eq('id', userId)
       .maybeSingle();
 
+    const { data: { user } } = await supabase.auth.getUser();
+    const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
+    const username = user?.email?.split('@')[0] || 'usuario';
+    const role = user?.user_metadata?.role === 'Administrador' ? 'Administrador' : 'Normal';
+
     if (data && !error) {
-      const { data: { user } } = await supabase.auth.getUser();
       setProfile({
         ...data,
         full_name: user?.user_metadata?.full_name || data.username || 'Usuário',
         avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || userId}`
       });
-    } else {
-      // If profile doesn't exist, use auth data as fallback
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setProfile({
-          id: user.id,
-          username: user.email?.split('@')[0] || 'usuario',
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuário',
-          role: user.user_metadata?.role === 'Administrador' ? 'Administrador' : 'Normal',
-          avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`
-        });
-      }
+    } else if (user) {
+      // Profile não existe no banco — criar automaticamente
+      await supabase.from('profiles').insert({
+        id: user.id,
+        username,
+        full_name: fullName,
+        role,
+      });
+
+      setProfile({
+        id: user.id,
+        username,
+        full_name: fullName,
+        role,
+        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`
+      });
     }
   };
 
@@ -75,7 +83,20 @@ const App: React.FC = () => {
       .order('created_at', { ascending: false });
 
     if (data && !error) {
-      setPlans(data);
+      // Buscar profiles dos criadores para popular campo profiles
+      const userIds = [...new Set(data.map(p => p.professional_id))];
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, username, full_name')
+        .in('id', userIds);
+
+      const profilesMap = new Map((profilesData || []).map(p => [p.id, p]));
+      const enriched = data.map(p => ({
+        ...p,
+        profiles: profilesMap.get(p.professional_id) || null
+      }));
+
+      setPlans(enriched);
     }
   };
 
